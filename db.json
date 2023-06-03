@@ -1,0 +1,60 @@
+{
+  "user": [],
+  "states": [
+    {
+      "id": 1,
+      "name": "Florida",
+      "abbreviation": "US-FL",
+      "userId": 1
+    },
+    {
+      "id": 2,
+      "name": "California",
+      "abbreviation": "US-CA",
+      "userId": 2
+    },
+    {
+      "id": 3,
+      "name": "Texas",
+      "abbreviation": "US-TX",
+      "userId": 1
+    }
+  ],
+  "memories": [
+    {
+      "id": 2,
+      "title": "My second memory",
+      "description": "This is my second memory",
+      "userId": 2,
+      "stateId": 2
+    },
+    {
+      "id": 3,
+      "title": "My third memory",
+      "description": "This is my third memory",
+      "userId": 1,
+      "stateId": 1
+    },
+    {
+      "id": 4,
+      "title": "My second memory",
+      "description": "This is my second memory",
+      "userId": 3,
+      "stateId": 1
+    },
+    {
+      "id": 6,
+      "title": "My second memory",
+      "description": "This is my second memory",
+      "userId": 3,
+      "stateId": 3
+    },
+    {
+      "id": 7,
+      "title": "My third memory",
+      "description": "This is my third memory",
+      "userId": 2,
+      "stateId": 1
+    }
+  ]
+}

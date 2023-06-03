@@ -1,0 +1,29 @@
+svg {
+  /* max-height: 100vh;  */
+  margin: 0 auto;
+  height: auto !important;
+  display: block;
+  max-width: 100%;
+}
+.land {
+  fill: #433633;
+  fill-opacity: 1;
+  stroke: white;
+  stroke-opacity: 1;
+  stroke-width: 0.5;
+}
+.land:hover {
+  fill: #65743a;
+  opacity: 1;
+}
+.visited {
+  fill: #65743a;
+  fill-opacity: 1;
+  stroke: white;
+  stroke-opacity: 1;
+  stroke-width: 0.5;
+}
+.visited:hover {
+  fill: #65872a;
+  opacity: 1;
+}
