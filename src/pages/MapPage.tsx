@@ -1,9 +1,9 @@
 import { AppBar, Box, Container, CssBaseline, Modal } from '@mui/material'
+import { style } from '../components/styles/modalStyle'
+import MemoryList from '../components/MemoryList'
 import ToolBar from '../components/ToolBar'
 import Map from '../components/map/Map'
 import { useState } from 'react'
-import MemoryList from '../components/MemoryList'
-import { style } from '../components/modalStyle'
 
 function MapPage() {
   const [isShowModal, setIsShowModal] = useState(false)
@@ -34,8 +34,6 @@ function MapPage() {
       <AppBar>
         <ToolBar />
       </AppBar>
-      {/* <Box mt={8}> */}
-      {/* Add top margin to create space below AppBar */}
       <Container component='main' sx={{ pt: 10 }}>
         <Map handleModalOpen={handleOpen} />
         {modal}

@@ -12,7 +12,6 @@ import { useRemoveStateMutation } from '../store'
     endpoints: an object containing endpoint definitions
 
 */
-
 const memoriesApi = createApi({
   reducerPath: 'memories',
   baseQuery: fetchBaseQuery({

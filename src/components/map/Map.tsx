@@ -4,7 +4,7 @@ import { setCurrentState } from '../../redux/store'
 import { useDispatch } from 'react-redux'
 import { Skeleton } from '@mui/material'
 import { states } from './states'
-import './map.css'
+import '../styles/map.css'
 
 type MapProps = {
   handleModalOpen: () => void

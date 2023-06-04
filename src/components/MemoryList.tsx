@@ -1,22 +1,27 @@
 import { useFetchMemoriesQuery } from '../redux/store'
 import { selectCurrentState } from '../redux/store'
 import MemoryListItem from './MemoryListItem'
+import AddMemoryForm from './AddMemoryForm'
+import { Box, Button } from '@mui/material'
+import { style } from './styles/modalStyle'
 import { useSelector } from 'react-redux'
 import { Memory } from '../redux/types'
-import { style } from './modalStyle'
-import { Box, Button } from '@mui/material'
 import { useState } from 'react'
-import AddMemoryForm from './AddMemoryForm'
 
 function MemoryList() {
+  const [expanded, setExpanded] = useState<number | false>(false)
   const currentState = useSelector(selectCurrentState)
   const { data, error, isFetching } = useFetchMemoriesQuery(currentState)
   const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false)
 
   const handleAddMemory = () => {
-    // addMemory()
     setIsAddMemoryModalOpen(!isAddMemoryModalOpen)
   }
+
+  const handleAccordionChange =
+    (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false)
+    }
 
   let content = null
   if (isFetching) {
@@ -27,7 +32,14 @@ function MemoryList() {
     content = <AddMemoryForm handleBackClick={handleAddMemory} />
   } else {
     content = data?.map((memory: Memory) => {
-      return <MemoryListItem key={memory.id} memory={memory}></MemoryListItem>
+      return (
+        <MemoryListItem
+          expanded={expanded}
+          handleAccordionChange={handleAccordionChange}
+          key={memory.id}
+          memory={memory}
+        ></MemoryListItem>
+      )
     })
   }
 
