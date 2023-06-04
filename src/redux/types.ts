@@ -14,3 +14,8 @@ export type Memory = {
   userId: number
   stateId: number
 }
+
+export type CurrentState = {
+  currentStateAbbreviation: string
+  currentStateTitle: string
+}

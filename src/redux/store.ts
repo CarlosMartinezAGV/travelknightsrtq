@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import { statesApi } from './api/statesApi'
 import { memoriesApi } from './api/memoriesApi'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
+import { stateReducer, setCurrentState } from './slices/stateSlice'
 
 const store = configureStore({
   reducer: {
     [statesApi.reducerPath]: statesApi.reducer,
     [memoriesApi.reducerPath]: memoriesApi.reducer,
+    currentState: stateReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -19,14 +21,16 @@ const store = configureStore({
 setupListeners(store.dispatch)
 
 export type RootState = ReturnType<typeof store.getState>
-export { store }
+export { store, setCurrentState }
 export {
   useFetchStatesQuery,
   // useAddStateMutation,
-  // useRemoveStateMutation,
+  useRemoveStateMutation,
 } from './api/statesApi'
 export {
   useFetchMemoriesQuery,
   useAddMemoryMutation,
   useRemoveMemoryMutation,
 } from './api/memoriesApi'
+
+export const selectCurrentState = (state: RootState) => state.currentState

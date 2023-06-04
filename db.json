@@ -22,39 +22,54 @@
   ],
   "memories": [
     {
+      "id": 1,
+      "title": "My First memory",
+      "description": "This is my first memory",
+      "userId": 1,
+      "stateAbbreviationId": "US-FL"
+    },
+    {
       "id": 2,
       "title": "My second memory",
       "description": "This is my second memory",
-      "userId": 2,
-      "stateId": 2
+      "userId": 1,
+      "stateAbbreviationId": "US-FL"
     },
     {
       "id": 3,
-      "title": "My third memory",
-      "description": "This is my third memory",
-      "userId": 1,
-      "stateId": 1
+      "title": "My second memory",
+      "description": "This is my second memory",
+      "userId": 2,
+      "stateAbbreviationId": "US-CA"
     },
     {
       "id": 4,
       "title": "My second memory",
       "description": "This is my second memory",
       "userId": 3,
-      "stateId": 1
+      "stateAbbreviationId": "US-TX"
     },
     {
       "id": 6,
       "title": "My second memory",
       "description": "This is my second memory",
       "userId": 3,
-      "stateId": 3
+      "stateAbbreviationId": "US-TX"
     },
     {
       "id": 7,
       "title": "My third memory",
       "description": "This is my third memory",
       "userId": 2,
-      "stateId": 1
+      "stateAbbreviationId": "US-CA"
+    },
+    {
+      "title": "test",
+      "city": "test",
+      "description": "test",
+      "userId": 1,
+      "stateAbbreviationId": "US-FL",
+      "id": 8
     }
   ]
 }

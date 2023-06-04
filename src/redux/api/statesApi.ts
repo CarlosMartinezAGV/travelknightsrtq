@@ -1,7 +1,7 @@
 // '@reduxjs/toolkit/query/react' creates the custom hooks
 // '@reduxjs/toolkit/query' does not create the custom hooks
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { USER } from '../user'
+import { USER, BASE_URL } from '../user'
 import { State } from '../types'
 /*
     3 required properties:
@@ -11,8 +11,6 @@ import { State } from '../types'
     endpoints: an object containing endpoint definitions
 
 */
-const BASE_URL = 'http://localhost:3001/'
-
 const statesApi = createApi({
   reducerPath: 'states',
   baseQuery: fetchBaseQuery({
@@ -61,20 +59,21 @@ const statesApi = createApi({
           }
         },
       }),
-      //   removeState: builder.mutation({
-      //     /*
-      //       Album is passed but for invalidatesTags we only need the userId
-      //       so we can use the userId from the album object
-      //       to invalidate the Album tag
-      //       But, when we don't have the album object, we can use the
-      //       result object to get the userId
-      //     */
-      //     query: (user) => {
-      //       return {
-      //         method: 'DELETE',
-      //       }
-      //     },
-      //   }),
+      removeState: builder.mutation({
+        /*
+            Album is passed but for invalidatesTags we only need the userId
+            so we can use the userId from the album object
+            to invalidate the Album tag
+            But, when we don't have the album object, we can use the
+            result object to get the userId
+          */
+        query: (state) => {
+          return {
+            url: `/states/${state.id}`,
+            method: 'DELETE',
+          }
+        },
+      }),
     }
   },
 })
@@ -84,6 +83,6 @@ const statesApi = createApi({
 export const {
   useFetchStatesQuery,
   //   useAddStateMutation,
-  //   useRemoveStateMutation,
+  useRemoveStateMutation,
 } = statesApi
 export { statesApi }

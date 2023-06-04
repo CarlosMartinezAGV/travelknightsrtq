@@ -1,23 +1,21 @@
-import { useFetchMemoriesQuery, useAddMemoryMutation } from '../redux/store'
+import { useFetchMemoriesQuery } from '../redux/store'
+import { selectCurrentState } from '../redux/store'
 import MemoryListItem from './MemoryListItem'
-import { Box } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
-import { style } from './modalStyle'
-import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Memory } from '../redux/types'
+import { style } from './modalStyle'
+import { Box, Button } from '@mui/material'
+import { useState } from 'react'
+import AddMemoryForm from './AddMemoryForm'
 
-type MemoryListProps = {
-  stateAbbreviation: string
-  stateTitle: string
-}
-
-function MemoryList({ stateAbbreviation, stateTitle }: MemoryListProps) {
-  const { data, error, isFetching } = useFetchMemoriesQuery(stateAbbreviation)
-  const [addMemory, results] = useAddMemoryMutation()
+function MemoryList() {
+  const currentState = useSelector(selectCurrentState)
+  const { data, error, isFetching } = useFetchMemoriesQuery(currentState)
   const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false)
 
   const handleAddMemory = () => {
     // addMemory()
+    setIsAddMemoryModalOpen(!isAddMemoryModalOpen)
   }
 
   let content = null
@@ -25,27 +23,29 @@ function MemoryList({ stateAbbreviation, stateTitle }: MemoryListProps) {
     // content = <Skeleton times={3} className='h-10 w-full' />
   } else if (error) {
     content = <div>Error Loading Memories...</div>
+  } else if (isAddMemoryModalOpen) {
+    content = <AddMemoryForm handleBackClick={handleAddMemory} />
   } else {
     content = data?.map((memory: Memory) => {
       return <MemoryListItem key={memory.id} memory={memory}></MemoryListItem>
     })
   }
 
-  // const defautContent = (
-  //   )
+  const defautContent = (
+    <Box sx={style.memorylist}>
+      <h3>Your Memories For {currentState.currentStateTitle}</h3>
+      <Button
+        variant='contained'
+        onClick={() => setIsAddMemoryModalOpen(!isAddMemoryModalOpen)}
+      >
+        Add Memory
+      </Button>
+    </Box>
+  )
 
   return (
     <Box>
-      <Box sx={style.memorylist}>
-        <h3>Memories for {stateTitle}</h3>
-        <LoadingButton
-          variant='contained'
-          onClick={() => setIsAddMemoryModalOpen(true)}
-          loading={results.isLoading}
-        >
-          Add Memory
-        </LoadingButton>
-      </Box>
+      {isAddMemoryModalOpen ? null : defautContent}
       {content}
     </Box>
   )

@@ -1,16 +1,32 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useFetchStatesQuery } from '../../redux/store'
+import { setCurrentState } from '../../redux/store'
+import { useDispatch } from 'react-redux'
 import { Skeleton } from '@mui/material'
 import { states } from './states'
 import './map.css'
 
 type MapProps = {
-  handleModalOpen: (stateAbrreviation: string, title: string) => void
+  handleModalOpen: () => void
 }
 
 function Map({ handleModalOpen }: MapProps) {
-  // Api call should check if state is in state
+  const dispatch = useDispatch()
+
   const { data, error, isLoading } = useFetchStatesQuery()
+
+  const handleStateModalOpen = (
+    currentStateAbbreviation: string,
+    currentStateTitle: string
+  ) => {
+    dispatch(
+      setCurrentState({
+        currentStateAbbreviation,
+        currentStateTitle,
+      })
+    )
+    handleModalOpen()
+  }
 
   const renderedStates = states.map(({ title, className, id, ...props }) => {
     // Check if state is in state and add visited class
@@ -26,7 +42,7 @@ function Map({ handleModalOpen }: MapProps) {
         id={id}
         {...props}
         className={stateVisitedClass}
-        onClick={() => handleModalOpen(id, title)}
+        onClick={() => handleStateModalOpen(id, title)}
       >
         <title>{title}</title>
       </path>
