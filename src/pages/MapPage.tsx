@@ -1,44 +1,11 @@
-import { AppBar, Box, Container, CssBaseline, Modal } from '@mui/material'
-import { style } from '../components/styles/modalStyle'
-import MemoryList from '../components/MemoryList'
-import ToolBar from '../components/ToolBar'
+import { Container } from '@mui/material'
 import Map from '../components/map/Map'
-import { useState } from 'react'
 
 function MapPage() {
-  const [isShowModal, setIsShowModal] = useState(false)
-
-  const handleOpen = () => {
-    setIsShowModal(true)
-  }
-  const handleClose = () => {
-    setIsShowModal(false)
-  }
-
-  const modal = isShowModal ? (
-    <Modal
-      open={isShowModal}
-      onClose={handleClose}
-      aria-labelledby='modal-modal-title'
-      aria-describedby='modal-modal-description'
-    >
-      <Box sx={style.modal}>
-        <MemoryList />
-      </Box>
-    </Modal>
-  ) : null
-
   return (
-    <Box id='map-page'>
-      <CssBaseline />
-      <AppBar>
-        <ToolBar />
-      </AppBar>
-      <Container component='main' sx={{ pt: 10 }}>
-        <Map handleModalOpen={handleOpen} />
-        {modal}
-      </Container>
-    </Box>
+    <Container component='main' maxWidth='xl' sx={{ pt: 6 }}>
+      <Map />
+    </Container>
   )
 }
 

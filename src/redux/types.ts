@@ -16,6 +16,8 @@ export type Memory = {
 }
 
 export type CurrentState = {
+  id: number
   currentStateAbbreviation: string
   currentStateTitle: string
+  totalStateMemoryCount: number
 }

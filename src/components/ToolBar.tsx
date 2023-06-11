@@ -9,8 +9,8 @@ import MenuIcon from '@mui/icons-material/Menu'
 function ToolBar() {
   return (
     <Toolbar sx={{ backgroundColor: '#65743a' }}>
-      <AccountCircle sx={{ fontSize: 21, m: 0.4 }} />
-      <Typography component='div' sx={{ fontSize: 15 }}>
+      <AccountCircle sx={{ fontSize: 21 }} />
+      <Typography component='div' sx={{ fontSize: 18, ml: 1 }}>
         Carlos Martinez
       </Typography>
       <Typography

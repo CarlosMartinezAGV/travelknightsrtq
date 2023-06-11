@@ -3,7 +3,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { BASE_URL, USER } from '../user'
 import { CurrentState, Memory } from '../types'
-import { useRemoveStateMutation } from '../store'
 /*
     3 required properties:
 
@@ -25,19 +24,21 @@ const memoriesApi = createApi({
         // to specify which tags should be invalidated when the mutation
         // is fulfilled successfully
         invalidatesTags: (result, error, memory) => [
-          { type: 'Memory', id: memory.id },
+          { type: 'Memory', id: 'LIST' },
         ],
         query: (memory) => {
           return {
             url: '/memories',
             method: 'POST',
             body: {
-              //   userId: user.id,
+              // With accounts, we can use the id from the account object
+              // userId: user.id,
               title: memory.title,
               city: memory.city,
+              date: memory.date,
               description: memory.description,
               userId: USER.id,
-              stateAbbreviationId: memory.stateAbbreviationId,
+              stateId: memory.stateId,
             },
           }
         },
@@ -63,7 +64,7 @@ const memoriesApi = createApi({
             url: '/memories',
             params: {
               userId: USER.id,
-              stateAbbreviationId: state.currentStateAbbreviation,
+              stateId: state.id,
             },
             method: 'GET',
           }
@@ -71,12 +72,12 @@ const memoriesApi = createApi({
       }),
       removeMemory: builder.mutation({
         /*
-            Album is passed but for invalidatesTags we only need the userId
-            so we can use the userId from the album object
-            to invalidate the Album tag
-            But, when we don't have the album object, we can use the
-            result object to get the userId
-          */
+          Album is passed but for invalidatesTags we only need the userId
+          so we can use the userId from the album object
+          to invalidate the Album tag
+          But, when we don't have the album object, we can use the
+          result object to get the userId
+        */
         invalidatesTags: (result, error, memory) => [
           { type: 'Memory', id: memory.id },
         ],
@@ -86,19 +87,6 @@ const memoriesApi = createApi({
             method: 'DELETE',
           }
         },
-        // onQueryStarted: async (memory, { dispatch, queryFulfilled }) => {
-
-        // isSuccess: async (_, { getState, dispatch }) => {
-        //   // const stateId = getState().memories.stateId
-        //   // const memories = getState().memories.data
-
-        //   // Check if there are no more memories tied to the state
-        //   if (memories.length === 0) {
-        //     // Dispatch an action to remove the state
-        //     // dispatch(stateApi.util.removeState(stateId))
-        //     // Additional logic or dispatch actions after removing the state
-        //   }
-        // },
       }),
     }
   },

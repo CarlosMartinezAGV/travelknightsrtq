@@ -2,7 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import { statesApi } from './api/statesApi'
 import { memoriesApi } from './api/memoriesApi'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
-import { stateReducer, setCurrentState } from './slices/stateSlice'
+import {
+  stateReducer,
+  setCurrentState,
+  setCurrentStateWithId,
+  setTotalStateMemoryCount,
+} from './slices/stateSlice'
 
 const store = configureStore({
   reducer: {
@@ -21,10 +26,15 @@ const store = configureStore({
 setupListeners(store.dispatch)
 
 export type RootState = ReturnType<typeof store.getState>
-export { store, setCurrentState }
+export {
+  store,
+  setCurrentState,
+  setCurrentStateWithId,
+  setTotalStateMemoryCount,
+}
 export {
   useFetchStatesQuery,
-  // useAddStateMutation,
+  useAddStateMutation,
   useRemoveStateMutation,
 } from './api/statesApi'
 export {

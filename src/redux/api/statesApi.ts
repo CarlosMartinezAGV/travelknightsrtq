@@ -11,17 +11,23 @@ import { State } from '../types'
     endpoints: an object containing endpoint definitions
 
 */
+
+// FIXME: FIX TAGS FOR FETCHSTATE
 const statesApi = createApi({
   reducerPath: 'states',
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
   }),
+  tagTypes: ['States'],
   endpoints(builder) {
     return {
       addState: builder.mutation({
         // Provide the data hook builder with an invalidatesTags option
         // to specify which tags should be invalidated when the mutation
         // is fulfilled successfully
+        invalidatesTags: (result, error, state) => [
+          { type: 'States', id: 'LIST' },
+        ],
         query: (state) => {
           return {
             url: '/states',
@@ -29,7 +35,8 @@ const statesApi = createApi({
             body: {
               //   userId: user.id,
               userId: USER.id,
-              state: state,
+              name: state.name,
+              abbreviation: state.abbreviation,
             },
           }
         },
@@ -38,17 +45,17 @@ const statesApi = createApi({
         // Provide the data hook builder with a providedTags option
         // to specify which tags should be provided to the data hook
         // when the query is fulfilled
-        // providesTags: (result, error, user) => {
-        //   const tags = result.map((state) => {
-        //     return {
-        //       type: 'States',
-        //       id: state.id,
-        //     }
-        //   })
-
-        //   tags.push({ type: 'UserId', id: user.id })
-        //   return tags
-        // },
+        providesTags: (result, error, state) => {
+          return result
+            ? [
+                ...result.map((state) => ({
+                  type: 'States' as const,
+                  id: state.id,
+                })),
+                { type: 'States', id: 'LIST' },
+              ]
+            : [{ type: 'States', id: 'LIST' }]
+        },
         query: () => {
           return {
             url: '/states',
@@ -59,6 +66,25 @@ const statesApi = createApi({
           }
         },
       }),
+      fetchState: builder.query<State, string>({
+        query: (id) => {
+          return {
+            url: '/states',
+            params: {
+              userId: USER.id,
+              id: id,
+            },
+            method: 'GET',
+          }
+        },
+        transformResponse: (response) => {
+          // Modify the response to return an object instead of an array
+          if (Array.isArray(response)) {
+            return response[0]
+          }
+          return response
+        },
+      }),
       removeState: builder.mutation({
         /*
             Album is passed but for invalidatesTags we only need the userId
@@ -67,9 +93,12 @@ const statesApi = createApi({
             But, when we don't have the album object, we can use the
             result object to get the userId
           */
-        query: (state) => {
+        invalidatesTags: (result, error, stateId) => [
+          { type: 'States', id: stateId },
+        ],
+        query: (stateId) => {
           return {
-            url: `/states/${state.id}`,
+            url: `/states/${stateId}`,
             method: 'DELETE',
           }
         },
@@ -82,7 +111,8 @@ const statesApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
   useFetchStatesQuery,
-  //   useAddStateMutation,
+  useFetchStateQuery,
+  useAddStateMutation,
   useRemoveStateMutation,
 } = statesApi
 export { statesApi }

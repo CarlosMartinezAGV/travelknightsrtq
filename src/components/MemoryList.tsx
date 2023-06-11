@@ -1,18 +1,42 @@
-import { useFetchMemoriesQuery } from '../redux/store'
+import {
+  useFetchMemoriesQuery,
+  setTotalStateMemoryCount,
+  setCurrentStateWithId,
+} from '../redux/store'
+import { Box, Button, Skeleton, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentState } from '../redux/store'
 import MemoryListItem from './MemoryListItem'
+import { useEffect, useState } from 'react'
 import AddMemoryForm from './AddMemoryForm'
-import { Box, Button } from '@mui/material'
-import { style } from './styles/modalStyle'
-import { useSelector } from 'react-redux'
 import { Memory } from '../redux/types'
-import { useState } from 'react'
+import { style } from './styles/styles'
 
 function MemoryList() {
+  const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false)
   const [expanded, setExpanded] = useState<number | false>(false)
   const currentState = useSelector(selectCurrentState)
-  const { data, error, isFetching } = useFetchMemoriesQuery(currentState)
-  const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false)
+  const {
+    data: memoriesData,
+    error: memoriesError,
+    isFetching: isFetchingMemories,
+  } = useFetchMemoriesQuery(currentState)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (memoriesData && memoriesData?.length > 0) {
+      dispatch(setCurrentStateWithId({ id: memoriesData[0].stateId }))
+
+      dispatch(
+        setTotalStateMemoryCount({
+          totalStateMemoryCount: memoriesData?.length,
+        })
+      )
+    } else {
+      dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }))
+    }
+  }, [dispatch, memoriesData])
 
   const handleAddMemory = () => {
     setIsAddMemoryModalOpen(!isAddMemoryModalOpen)
@@ -24,30 +48,54 @@ function MemoryList() {
     }
 
   let content = null
-  if (isFetching) {
-    // content = <Skeleton times={3} className='h-10 w-full' />
-  } else if (error) {
+  if (isFetchingMemories) {
+    content = <Skeleton animation='wave' />
+  } else if (memoriesError) {
     content = <div>Error Loading Memories...</div>
   } else if (isAddMemoryModalOpen) {
     content = <AddMemoryForm handleBackClick={handleAddMemory} />
   } else {
-    content = data?.map((memory: Memory) => {
-      return (
-        <MemoryListItem
-          expanded={expanded}
-          handleAccordionChange={handleAccordionChange}
-          key={memory.id}
-          memory={memory}
-        ></MemoryListItem>
+    content =
+      memoriesData?.length === 0 ? (
+        <Box sx={style.emptylist}>No Memories Yet. Add One!</Box>
+      ) : (
+        <Box>
+          <Box
+            sx={{
+              width: '100%',
+              flexShrink: 0,
+              display: 'flex',
+              justifyContent: 'space-between',
+              pl: 2,
+              pr: 11,
+              mb: 1,
+            }}
+          >
+            <Typography sx={{ flexShrink: 0 }}>Title</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>City</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>Date</Typography>
+          </Box>
+
+          {memoriesData?.map((memory: Memory) => {
+            return (
+              <MemoryListItem
+                expanded={expanded}
+                handleAccordionChange={handleAccordionChange}
+                key={memory.id}
+                memory={memory}
+              />
+            )
+          })}
+        </Box>
       )
-    })
   }
 
   const defautContent = (
     <Box sx={style.memorylist}>
-      <h3>Your Memories For {currentState.currentStateTitle}</h3>
+      <h3>Your Memories From {currentState.currentStateTitle}</h3>
       <Button
         variant='contained'
+        sx={style.primaryButton}
         onClick={() => setIsAddMemoryModalOpen(!isAddMemoryModalOpen)}
       >
         Add Memory
