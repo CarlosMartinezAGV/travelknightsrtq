@@ -10,11 +10,9 @@ import MemoryList from '../MemoryList'
 import { style } from '../styles/styles'
 
 function Map() {
-  const dispatch = useDispatch()
-
   const { data, error, isLoading } = useFetchStatesQuery()
-
   const [isShowModal, setIsShowModal] = useState(false)
+  const dispatch = useDispatch()
 
   const handleModalOpen = (
     id: number | undefined,

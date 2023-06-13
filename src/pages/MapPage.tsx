@@ -3,7 +3,7 @@ import Map from '../components/map/Map'
 
 function MapPage() {
   return (
-    <Container component='main' maxWidth='xl' sx={{ pt: 6 }}>
+    <Container id='map-page' component='main' maxWidth='xl'>
       <Map />
     </Container>
   )

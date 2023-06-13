@@ -8,10 +8,10 @@ import {
   useRemoveStateMutation,
 } from '../redux/store'
 import { Box, Button, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 import Accordion from '@mui/material/Accordion'
 import { Memory } from '../redux/types'
 import { style } from './styles/styles'
-import { useDispatch, useSelector } from 'react-redux'
 
 type MemoryListItemProps = {
   memory: Memory
@@ -19,25 +19,33 @@ type MemoryListItemProps = {
   handleAccordionChange: (
     panel: number
   ) => (event: React.SyntheticEvent, isExpanded: boolean) => void
+  handleLoading: (isLoadingFlag: boolean) => void
 }
 
 function MemoryListItem({
   memory,
   expanded,
   handleAccordionChange,
+  handleLoading,
 }: MemoryListItemProps) {
   const currentState = useSelector(selectCurrentState)
-  const [removeMemory, results] = useRemoveMemoryMutation()
-  const [removeState, removeStateResults] = useRemoveStateMutation()
+  const [removeMemory] = useRemoveMemoryMutation()
+  const [removeState] = useRemoveStateMutation()
 
   const dispatch = useDispatch()
 
-  const handleDeleteMemory = () => {
+  // Async function to remove memory
+  // and show progress indicator
+  const handleDeleteMemory = async () => {
+    handleLoading(true)
+    // Remove memory first, then state when it's the last memory in the state
+    await removeMemory(memory)
+
     if (currentState.totalStateMemoryCount === 1) {
-      removeState(memory.stateId)
+      await removeState(memory.stateId)
       dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }))
     }
-    removeMemory(memory)
+    handleLoading(false)
   }
 
   return (
@@ -65,7 +73,10 @@ function MemoryListItem({
             {memory.city}
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>
-            {new Date(memory.date).toLocaleDateString('en-US')}
+            {new Date(memory.startDate).toLocaleDateString('en-US')}
+          </Typography>
+          <Typography sx={{ color: 'text.secondary' }}>
+            {new Date(memory.endDate).toLocaleDateString('en-US')}
           </Typography>
         </Box>
       </AccordionSummary>

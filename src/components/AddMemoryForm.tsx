@@ -3,15 +3,23 @@ import {
   setCurrentStateWithId,
   useAddMemoryMutation,
 } from '../redux/store'
-import { Box, Button, Grid, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
-import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { useForm, Controller, SubmitHandler, set } from 'react-hook-form'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useAddStateMutation } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { style } from './styles/styles'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/en'
+import { useEffect, useState, useTransition } from 'react'
 
 type AddMemoryFormProps = {
   handleBackClick: () => void
@@ -20,15 +28,18 @@ type AddMemoryFormProps = {
 type IFormInput = {
   title: string
   city: string
-  date: Dayjs
+  startDate: Dayjs
+  endDate: Dayjs
   description: string
 }
 
 function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
-  const [addMemory, addMemoryResults] = useAddMemoryMutation()
-  const [addState, addStateResults] = useAddStateMutation()
-  const currentDate = dayjs()
   const currentState = useSelector(selectCurrentState)
+  const [isPending, startTransition] = useTransition()
+  const [isLoading, setIsLoading] = useState(false)
+  const [addMemory, post] = useAddMemoryMutation()
+  const [addState] = useAddStateMutation()
+  const currentDate = dayjs()
 
   const dispatch = useDispatch()
 
@@ -36,12 +47,15 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
     defaultValues: {
       title: ' ',
       city: ' ',
-      date: currentDate,
+      startDate: currentDate,
+      endDate: currentDate,
       description: ' ',
     },
   })
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    setIsLoading(true)
+
     if (currentState.totalStateMemoryCount <= 0) {
       const addStateData = await addState({
         name: currentState.currentStateTitle,
@@ -62,20 +76,14 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
         stateId: currentState.id,
       })
     }
-
+    setIsLoading(false)
     handleBackClick()
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
+    <Box sx={style.addMemoryForm}>
       <Typography component='h1' variant='h5' sx={{ mb: 4 }}>
-        New Memory
+        Add New Memory
       </Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -95,7 +103,7 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={4}>
             <Controller
               name='city'
               control={control}
@@ -110,20 +118,31 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
-            <Controller
-              name='date'
-              control={control}
-              render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    {...field}
-                    label='Trip Date'
-                    value={currentDate}
-                  />
-                </LocalizationProvider>
-              )}
-            />
+          <Grid item xs={12} sm={4}>
+            <Box display='flex' justifyContent='flex-end'>
+              <Controller
+                name='startDate'
+                control={control}
+                render={({ field }) => (
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker {...field} label='Start Date' />
+                  </LocalizationProvider>
+                )}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Box display='flex' justifyContent='flex-end'>
+              <Controller
+                name='endDate'
+                control={control}
+                render={({ field }) => (
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker {...field} label='End Date' />
+                  </LocalizationProvider>
+                )}
+              />
+            </Box>
           </Grid>
           <Grid item xs={12}>
             <Controller
@@ -142,7 +161,7 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
             />
           </Grid>
           <Grid item xs={12}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Box sx={style.addMemoryFormButtonLayout}>
               <Button onClick={handleBackClick} sx={style.secondaryButton}>
                 Back
               </Button>

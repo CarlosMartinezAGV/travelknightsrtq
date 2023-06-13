@@ -3,7 +3,13 @@ import {
   setTotalStateMemoryCount,
   setCurrentStateWithId,
 } from '../redux/store'
-import { Box, Button, Skeleton, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Skeleton,
+  Typography,
+} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentState } from '../redux/store'
 import MemoryListItem from './MemoryListItem'
@@ -16,6 +22,7 @@ function MemoryList() {
   const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false)
   const [expanded, setExpanded] = useState<number | false>(false)
   const currentState = useSelector(selectCurrentState)
+  const [isLoading, setIsLoading] = useState(false)
   const {
     data: memoriesData,
     error: memoriesError,
@@ -24,6 +31,8 @@ function MemoryList() {
 
   const dispatch = useDispatch()
 
+  // Set total state memory count
+  // Set current state from first memory stateId
   useEffect(() => {
     if (memoriesData && memoriesData?.length > 0) {
       dispatch(setCurrentStateWithId({ id: memoriesData[0].stateId }))
@@ -47,52 +56,62 @@ function MemoryList() {
       setExpanded(isExpanded ? panel : false)
     }
 
+  const handleLoading = (isLoadingFlag: boolean) => {
+    setIsLoading(isLoadingFlag)
+  }
+
   let content = null
-  if (isFetchingMemories) {
-    content = <Skeleton animation='wave' />
+  if (isLoading || isFetchingMemories) {
+    content = (
+      <Box sx={style.loadingProgress}>
+        <CircularProgress />
+      </Box>
+    )
   } else if (memoriesError) {
-    content = <div>Error Loading Memories...</div>
+    content = <Box>Error Loading Memories...</Box>
   } else if (isAddMemoryModalOpen) {
     content = <AddMemoryForm handleBackClick={handleAddMemory} />
   } else {
     content =
+      // Check if there are memories
+      // If there are no memories, display empty list message
       memoriesData?.length === 0 ? (
-        <Box sx={style.emptylist}>No Memories Yet. Add One!</Box>
+        <Box id='no-memories-message' sx={style.emptylist}>
+          No Memories Yet. Add One!
+        </Box>
       ) : (
+        // If there are memories, display memories
         <Box>
-          <Box
-            sx={{
-              width: '100%',
-              flexShrink: 0,
-              display: 'flex',
-              justifyContent: 'space-between',
-              pl: 2,
-              pr: 11,
-              mb: 1,
-            }}
-          >
-            <Typography sx={{ flexShrink: 0 }}>Title</Typography>
-            <Typography sx={{ color: 'text.secondary' }}>City</Typography>
-            <Typography sx={{ color: 'text.secondary' }}>Date</Typography>
+          <Box id='modal-headers' sx={style.modalHeader}>
+            <Typography fontWeight='bold' sx={{ flexShrink: 0 }}>
+              Title
+            </Typography>
+            <Typography fontWeight='bold'>City</Typography>
+            <Typography fontWeight='bold'>Start Date</Typography>
+            <Typography fontWeight='bold'>End Date</Typography>
           </Box>
-
-          {memoriesData?.map((memory: Memory) => {
-            return (
-              <MemoryListItem
-                expanded={expanded}
-                handleAccordionChange={handleAccordionChange}
-                key={memory.id}
-                memory={memory}
-              />
-            )
-          })}
+          <Box id='memory-list-items'>
+            {memoriesData?.map((memory: Memory) => {
+              return (
+                <MemoryListItem
+                  expanded={expanded}
+                  handleAccordionChange={handleAccordionChange}
+                  key={memory.id}
+                  memory={memory}
+                  handleLoading={handleLoading}
+                />
+              )
+            })}
+          </Box>
         </Box>
       )
   }
 
   const defautContent = (
-    <Box sx={style.memorylist}>
-      <h3>Your Memories From {currentState.currentStateTitle}</h3>
+    <Box id='modal-memory-content' sx={style.memorylist}>
+      <Box>
+        <h3>Your Memories From {currentState.currentStateTitle}</h3>
+      </Box>
       <Button
         variant='contained'
         sx={style.primaryButton}
@@ -104,7 +123,7 @@ function MemoryList() {
   )
 
   return (
-    <Box>
+    <Box id='memory-list'>
       {isAddMemoryModalOpen ? null : defautContent}
       {content}
     </Box>

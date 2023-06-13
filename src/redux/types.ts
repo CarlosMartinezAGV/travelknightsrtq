@@ -10,7 +10,8 @@ export type Memory = {
   title: string
   city: string
   description: string
-  date: string
+  startDate: string
+  endDate: string
   userId: number
   stateId: number
 }
