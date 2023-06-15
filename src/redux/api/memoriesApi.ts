@@ -23,9 +23,7 @@ const memoriesApi = createApi({
         // Provide the data hook builder with an invalidatesTags option
         // to specify which tags should be invalidated when the mutation
         // is fulfilled successfully
-        invalidatesTags: (result, error, memory) => [
-          { type: 'Memory', id: 'LIST' },
-        ],
+        invalidatesTags: () => [{ type: 'Memory', id: 'LIST' }],
         query: (memory) => {
           return {
             url: '/memories',
@@ -48,7 +46,7 @@ const memoriesApi = createApi({
         // Provide the data hook builder with a providedTags option
         // to specify which tags should be provided to the data hook
         // when the query is fulfilled
-        providesTags: (result, error, state) => {
+        providesTags: (result, _error, state) => {
           return result
             ? [
                 ...result.map((memory) => ({
@@ -79,9 +77,7 @@ const memoriesApi = createApi({
           But, when we don't have the album object, we can use the
           result object to get the userId
         */
-        invalidatesTags: (result, error, memory) => [
-          { type: 'Memory', id: memory.id },
-        ],
+        invalidatesTags: (memory) => [{ type: 'Memory', id: memory.id }],
         query: (memory) => {
           return {
             url: `/memories/${memory.id}`,

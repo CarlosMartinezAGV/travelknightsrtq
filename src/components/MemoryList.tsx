@@ -50,7 +50,7 @@ function MemoryList() {
   }
 
   const handleAccordionChange = useCallback(
-    (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    (panel: number) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded((prevExpanded) =>
         isExpanded ? panel : prevExpanded === panel ? false : prevExpanded
       )

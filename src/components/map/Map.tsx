@@ -2,7 +2,7 @@
 import { useFetchStatesQuery } from '../../redux/store'
 import { setCurrentState } from '../../redux/store'
 import { useDispatch } from 'react-redux'
-import { Box, Modal, Skeleton } from '@mui/material'
+import { Box, Modal } from '@mui/material'
 import { states } from './states'
 import '../styles/map.css'
 import { useState } from 'react'
@@ -10,7 +10,7 @@ import MemoryList from '../MemoryList'
 import { style } from '../styles/styles'
 
 function Map() {
-  const { data, error, isLoading } = useFetchStatesQuery()
+  const { data } = useFetchStatesQuery()
   const [isShowModal, setIsShowModal] = useState(false)
   const dispatch = useDispatch()
 

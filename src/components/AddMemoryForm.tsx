@@ -10,7 +10,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAddStateMutation } from '../redux/store'
 import { style } from './styles/styles'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { isBefore } from 'date-fns'
 
 type AddMemoryFormProps = {

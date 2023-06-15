@@ -25,9 +25,7 @@ const statesApi = createApi({
         // Provide the data hook builder with an invalidatesTags option
         // to specify which tags should be invalidated when the mutation
         // is fulfilled successfully
-        invalidatesTags: (result, error, state) => [
-          { type: 'States', id: 'LIST' },
-        ],
+        invalidatesTags: () => [{ type: 'States', id: 'LIST' }],
         query: (state) => {
           return {
             url: '/states',
@@ -45,7 +43,7 @@ const statesApi = createApi({
         // Provide the data hook builder with a providedTags option
         // to specify which tags should be provided to the data hook
         // when the query is fulfilled
-        providesTags: (result, error, state) => {
+        providesTags: (result) => {
           return result
             ? [
                 ...result.map((state) => ({
@@ -93,9 +91,7 @@ const statesApi = createApi({
             But, when we don't have the album object, we can use the
             result object to get the userId
           */
-        invalidatesTags: (result, error, stateId) => [
-          { type: 'States', id: stateId },
-        ],
+        invalidatesTags: (stateId) => [{ type: 'States', id: stateId }],
         query: (stateId) => {
           return {
             url: `/states/${stateId}`,
