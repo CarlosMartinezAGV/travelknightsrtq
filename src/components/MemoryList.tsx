@@ -3,17 +3,12 @@ import {
   setTotalStateMemoryCount,
   setCurrentStateWithId,
 } from '../redux/store'
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Skeleton,
-  Typography,
-} from '@mui/material'
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentState } from '../redux/store'
+import AddIcon from '@mui/icons-material/Add'
 import MemoryListItem from './MemoryListItem'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import AddMemoryForm from './AddMemoryForm'
 import { Memory } from '../redux/types'
 import { style } from './styles/styles'
@@ -24,23 +19,25 @@ function MemoryList() {
   const currentState = useSelector(selectCurrentState)
   const [isLoading, setIsLoading] = useState(false)
   const {
-    data: memoriesData,
+    data: memoriesDataFromQuery,
     error: memoriesError,
     isFetching: isFetchingMemories,
   } = useFetchMemoriesQuery(currentState)
 
   const dispatch = useDispatch()
 
+  // Memoize memories data from query
+  const memoriesData = useMemo(() => {
+    return memoriesDataFromQuery
+  }, [memoriesDataFromQuery])
+
   // Set total state memory count
   // Set current state from first memory stateId
   useEffect(() => {
-    if (memoriesData && memoriesData?.length > 0) {
+    if (memoriesData && memoriesData.length > 0) {
       dispatch(setCurrentStateWithId({ id: memoriesData[0].stateId }))
-
       dispatch(
-        setTotalStateMemoryCount({
-          totalStateMemoryCount: memoriesData?.length,
-        })
+        setTotalStateMemoryCount({ totalStateMemoryCount: memoriesData.length })
       )
     } else {
       dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }))
@@ -49,12 +46,17 @@ function MemoryList() {
 
   const handleAddMemory = () => {
     setIsAddMemoryModalOpen(!isAddMemoryModalOpen)
+    setExpanded(false)
   }
 
-  const handleAccordionChange =
+  const handleAccordionChange = useCallback(
     (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false)
-    }
+      setExpanded((prevExpanded) =>
+        isExpanded ? panel : prevExpanded === panel ? false : prevExpanded
+      )
+    },
+    []
+  )
 
   const handleLoading = (isLoadingFlag: boolean) => {
     setIsLoading(isLoadingFlag)
@@ -82,14 +84,22 @@ function MemoryList() {
       ) : (
         // If there are memories, display memories
         <Box>
-          <Box id='modal-headers' sx={style.modalHeader}>
-            <Typography fontWeight='bold' sx={{ flexShrink: 0 }}>
-              Title
-            </Typography>
-            <Typography fontWeight='bold'>City</Typography>
-            <Typography fontWeight='bold'>Start Date</Typography>
-            <Typography fontWeight='bold'>End Date</Typography>
-          </Box>
+          <Grid container id='modal-headers' sx={style.modalHeader}>
+            <Grid item xs={3}>
+              <Typography fontWeight='bold' sx={{ flexShrink: 0 }}>
+                Title
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography fontWeight='bold'>City</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography fontWeight='bold'>Start Date</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography fontWeight='bold'>End Date</Typography>
+            </Grid>
+          </Grid>
           <Box id='memory-list-items'>
             {memoriesData?.map((memory: Memory) => {
               return (
@@ -116,6 +126,7 @@ function MemoryList() {
         variant='contained'
         sx={style.primaryButton}
         onClick={() => setIsAddMemoryModalOpen(!isAddMemoryModalOpen)}
+        startIcon={<AddIcon />}
       >
         Add Memory
       </Button>

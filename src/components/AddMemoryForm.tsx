@@ -3,59 +3,49 @@ import {
   setCurrentStateWithId,
   useAddMemoryMutation,
 } from '../redux/store'
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Box, Button, Grid, TextField, Typography } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
-import { useForm, Controller, SubmitHandler, set } from 'react-hook-form'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { useAddStateMutation } from '../redux/store'
+import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAddStateMutation } from '../redux/store'
 import { style } from './styles/styles'
 import dayjs, { Dayjs } from 'dayjs'
-import 'dayjs/locale/en'
-import { useEffect, useState, useTransition } from 'react'
+import { isBefore } from 'date-fns'
 
 type AddMemoryFormProps = {
   handleBackClick: () => void
 }
 
-type IFormInput = {
+type AddMemoryFormValues = {
   title: string
   city: string
-  startDate: Dayjs
-  endDate: Dayjs
+  startDate: Date | null
+  endDate: Date
   description: string
 }
 
 function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
   const currentState = useSelector(selectCurrentState)
-  const [isPending, startTransition] = useTransition()
-  const [isLoading, setIsLoading] = useState(false)
-  const [addMemory, post] = useAddMemoryMutation()
+  const [addMemory] = useAddMemoryMutation()
   const [addState] = useAddStateMutation()
-  const currentDate = dayjs()
-
   const dispatch = useDispatch()
 
-  const { control, handleSubmit } = useForm({
+  const addMemoryForm = useForm<AddMemoryFormValues>({
     defaultValues: {
-      title: ' ',
-      city: ' ',
-      startDate: currentDate,
-      endDate: currentDate,
-      description: ' ',
+      title: '',
+      city: '',
+      startDate: null,
+      endDate: dayjs().toDate(),
+      description: '',
     },
   })
 
-  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    setIsLoading(true)
+  const { control, register, handleSubmit, formState, getValues } =
+    addMemoryForm
+  const { errors } = formState
 
+  const onSubmit: SubmitHandler<AddMemoryFormValues> = async (data) => {
     if (currentState.totalStateMemoryCount <= 0) {
       const addStateData = await addState({
         name: currentState.currentStateTitle,
@@ -76,7 +66,6 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
         stateId: currentState.id,
       })
     }
-    setIsLoading(false)
     handleBackClick()
   }
 
@@ -86,36 +75,30 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
         Add New Memory
       </Typography>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <Grid container spacing={2} justifyContent='space-between'>
           <Grid item xs={12}>
-            <Controller
+            <TextField
+              {...register('title', { required: 'required*' })}
+              fullWidth
+              label='Memory Title'
+              type='text'
               name='title'
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label='Memory Title'
-                  name='title'
-                  type='text'
-                />
-              )}
+              required={!!errors?.title}
+              error={!!errors?.title}
+              helperText={errors.title && errors.title?.message}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Controller
+            <TextField
+              {...register('city', { required: 'required*' })}
+              fullWidth
+              label='City'
               name='city'
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label='City'
-                  name='city'
-                  type='text'
-                />
-              )}
+              type='text'
+              required={!!errors?.city}
+              error={!!errors?.city}
+              helperText={errors.city && errors.city?.message}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -123,9 +106,35 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
               <Controller
                 name='startDate'
                 control={control}
+                rules={{
+                  required: 'required*',
+                  validate: {
+                    endDateAfterStartDate: (startDateValue) => {
+                      const endDateValue = getValues('endDate')
+                      if (startDateValue && endDateValue) {
+                        return (
+                          isBefore(startDateValue, endDateValue) ||
+                          'Start Date must be before End Date'
+                        )
+                      }
+                      return true // Return true if either value is null
+                    },
+                  },
+                }}
                 render={({ field }) => (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker {...field} label='Start Date' />
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      {...field}
+                      label='Start Date'
+                      slotProps={{
+                        textField: {
+                          error: !!errors?.startDate,
+                          helperText:
+                            errors.startDate && errors.startDate?.message,
+                          required: !!errors?.startDate,
+                        },
+                      }}
+                    />
                   </LocalizationProvider>
                 )}
               />
@@ -136,31 +145,45 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
               <Controller
                 name='endDate'
                 control={control}
+                rules={{ required: 'required' }}
                 render={({ field }) => (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker {...field} label='End Date' />
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      {...field}
+                      label='End Date'
+                      slotProps={{
+                        textField: {
+                          error: !!errors?.endDate,
+                          helperText: errors.endDate && errors.endDate?.message,
+                        },
+                      }}
+                    />
                   </LocalizationProvider>
                 )}
               />
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Controller
+            <TextField
+              {...register('description', {
+                required: 'required*',
+              })}
+              label='Description'
+              fullWidth
+              multiline
               name='description'
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label='Description'
-                  fullWidth
-                  multiline
-                  name='description'
-                  type='text'
-                />
-              )}
+              type='text'
+              required={!!errors?.description}
+              error={!!errors?.description}
+              helperText={errors.description && errors.description?.message}
             />
           </Grid>
           <Grid item xs={12}>
+            <Box sx={style.errorMessageContainer}>
+              <Typography>
+                {/* {isErrorMessage && 'Please fill out all fields!'} */}
+              </Typography>
+            </Box>
             <Box sx={style.addMemoryFormButtonLayout}>
               <Button onClick={handleBackClick} sx={style.secondaryButton}>
                 Back

@@ -1,6 +1,19 @@
 const primaryBackgroundColor = '#faf0ca'
 
 export const style = {
+  accordionDescriptionContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '0.5rem',
+  },
+  accordionContainer: {
+    border: '3px solid',
+    borderColor: '#65743a',
+    borderRadius: '0.2rem',
+    bgcolor: '#F9F3E0',
+    marginBottom: '0.25rem',
+  },
+  accordionDetailsContainer: { borderTop: '3px solid #65743a' },
   backgroundColorPrimary: {
     bgcolor: primaryBackgroundColor,
   },
@@ -28,7 +41,7 @@ export const style = {
     display: 'flex',
     justifyContent: 'space-between',
     pl: 2,
-    pr: 8,
+    pr: 9,
     mb: 1,
   },
   modalContent: {
@@ -42,6 +55,11 @@ export const style = {
     alignItems: 'center',
     marginY: '0.7rem',
   },
+  errorMessageContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   memorylist: {
     margin: '0.5rem',
     display: 'flex',
@@ -49,7 +67,13 @@ export const style = {
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  memorylistItem: {},
+  memorylistItemData: {
+    width: '100%',
+    flexShrink: 0,
+    display: 'flex',
+    justifyContent: 'space-between',
+    pr: 4,
+  },
   addMemoryForm: {
     display: 'flex',
     flexDirection: 'column',
@@ -63,6 +87,12 @@ export const style = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  deleteButtonContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '0.75rem',
   },
   primaryButton: {
     '&:hover': {
