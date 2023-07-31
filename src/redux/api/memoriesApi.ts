@@ -1,8 +1,8 @@
 // '@reduxjs/toolkit/query/react' creates the custom hooks
 // '@reduxjs/toolkit/query' does not create the custom hooks
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { BASE_URL, USER } from '../user'
-import { CurrentState, Memory } from '../types'
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { BASE_URL, USER } from "../user"
+import { CurrentState, Memory } from "../types"
 /*
     3 required properties:
 
@@ -12,22 +12,22 @@ import { CurrentState, Memory } from '../types'
 
 */
 const memoriesApi = createApi({
-  reducerPath: 'memories',
+  reducerPath: "memories",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
   }),
-  tagTypes: ['Memory'],
+  tagTypes: ["Memory"],
   endpoints(builder) {
     return {
       addMemory: builder.mutation({
         // Provide the data hook builder with an invalidatesTags option
         // to specify which tags should be invalidated when the mutation
         // is fulfilled successfully
-        invalidatesTags: () => [{ type: 'Memory', id: 'LIST' }],
+        invalidatesTags: () => [{ type: "Memory", id: "LIST" }],
         query: (memory) => {
           return {
-            url: '/memories',
-            method: 'POST',
+            url: "/memories",
+            method: "POST",
             body: {
               // With accounts, we can use the id from the account object
               // userId: user.id,
@@ -50,22 +50,40 @@ const memoriesApi = createApi({
           return result
             ? [
                 ...result.map((memory) => ({
-                  type: 'Memory' as const,
+                  type: "Memory" as const,
                   id: memory.id,
                   stateAbbreviationId: state.currentStateAbbreviation,
                 })),
-                { type: 'Memory', id: 'LIST' },
+                { type: "Memory", id: "LIST" },
               ]
-            : [{ type: 'Memory', id: 'LIST' }]
+            : [{ type: "Memory", id: "LIST" }]
         },
         query: (state) => {
           return {
-            url: '/memories',
+            url: "/memories",
             params: {
               userId: USER.id,
               stateId: state.id,
             },
-            method: 'GET',
+            method: "GET",
+          }
+        },
+      }),
+      updateMemory: builder.mutation({
+        invalidatesTags: (memory) => [{ type: "Memory", id: memory.id }],
+        query: (memory) => {
+          return {
+            url: `/memories/${memory.id}`,
+            method: "PUT",
+            body: {
+              title: memory.title,
+              city: memory.city,
+              startDate: memory.startDate,
+              endDate: memory.endDate,
+              description: memory.description,
+              userId: USER.id,
+              stateId: memory.stateId,
+            },
           }
         },
       }),
@@ -77,11 +95,11 @@ const memoriesApi = createApi({
           But, when we don't have the album object, we can use the
           result object to get the userId
         */
-        invalidatesTags: (memory) => [{ type: 'Memory', id: memory.id }],
+        invalidatesTags: (memory) => [{ type: "Memory", id: memory.id }],
         query: (memory) => {
           return {
             url: `/memories/${memory.id}`,
-            method: 'DELETE',
+            method: "DELETE",
           }
         },
       }),
@@ -92,8 +110,9 @@ const memoriesApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  useFetchMemoriesQuery,
   useAddMemoryMutation,
+  useFetchMemoriesQuery,
+  useUpdateMemoryMutation,
   useRemoveMemoryMutation,
 } = memoriesApi
 export { memoriesApi }

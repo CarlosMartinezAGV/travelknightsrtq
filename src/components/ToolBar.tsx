@@ -1,19 +1,14 @@
-import Typography from '@mui/material/Typography'
-import Toolbar from '@mui/material/Toolbar'
-import { AccountCircle } from '@mui/icons-material'
+import Typography from "@mui/material/Typography"
+import Toolbar from "@mui/material/Toolbar"
 
 function ToolBar() {
   return (
-    <Toolbar sx={{ backgroundColor: '#65743a' }}>
-      <AccountCircle sx={{ fontSize: 21 }} />
-      <Typography component='div' sx={{ fontSize: 18, ml: 1 }}>
-        Carlos Martinez
-      </Typography>
+    <Toolbar sx={{ backgroundColor: "#65743a" }}>
       <Typography
-        variant='h5'
-        component='div'
+        variant="h5"
+        component="div"
         sx={{ flexGrow: 1 }}
-        style={{ textAlign: 'center' }}
+        style={{ textAlign: "center" }}
       >
         Travel Knights
       </Typography>

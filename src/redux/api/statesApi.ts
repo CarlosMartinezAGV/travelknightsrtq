@@ -1,8 +1,8 @@
 // '@reduxjs/toolkit/query/react' creates the custom hooks
 // '@reduxjs/toolkit/query' does not create the custom hooks
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { USER, BASE_URL } from '../user'
-import { State } from '../types'
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { USER, BASE_URL } from "../user"
+import { State } from "../types"
 /*
     3 required properties:
 
@@ -14,22 +14,22 @@ import { State } from '../types'
 
 // FIXME: FIX TAGS FOR FETCHSTATE
 const statesApi = createApi({
-  reducerPath: 'states',
+  reducerPath: "states",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
   }),
-  tagTypes: ['States'],
+  tagTypes: ["States"],
   endpoints(builder) {
     return {
       addState: builder.mutation({
         // Provide the data hook builder with an invalidatesTags option
         // to specify which tags should be invalidated when the mutation
         // is fulfilled successfully
-        invalidatesTags: () => [{ type: 'States', id: 'LIST' }],
+        invalidatesTags: () => [{ type: "States", id: "LIST" }],
         query: (state) => {
           return {
-            url: '/states',
-            method: 'POST',
+            url: "/states",
+            method: "POST",
             body: {
               //   userId: user.id,
               userId: USER.id,
@@ -47,32 +47,32 @@ const statesApi = createApi({
           return result
             ? [
                 ...result.map((state) => ({
-                  type: 'States' as const,
+                  type: "States" as const,
                   id: state.id,
                 })),
-                { type: 'States', id: 'LIST' },
+                { type: "States", id: "LIST" },
               ]
-            : [{ type: 'States', id: 'LIST' }]
+            : [{ type: "States", id: "LIST" }]
         },
         query: () => {
           return {
-            url: '/states',
+            url: "/states",
             params: {
               userId: USER.id,
             },
-            method: 'GET',
+            method: "GET",
           }
         },
       }),
       fetchState: builder.query<State, string>({
         query: (id) => {
           return {
-            url: '/states',
+            url: "/states",
             params: {
               userId: USER.id,
               id: id,
             },
-            method: 'GET',
+            method: "GET",
           }
         },
         transformResponse: (response) => {
@@ -91,11 +91,11 @@ const statesApi = createApi({
             But, when we don't have the album object, we can use the
             result object to get the userId
           */
-        invalidatesTags: (stateId) => [{ type: 'States', id: stateId }],
+        invalidatesTags: () => [{ type: "States", id: "LIST" }],
         query: (stateId) => {
           return {
             url: `/states/${stateId}`,
-            method: 'DELETE',
+            method: "DELETE",
           }
         },
       }),

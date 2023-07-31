@@ -2,29 +2,38 @@ import {
   useFetchMemoriesQuery,
   setTotalStateMemoryCount,
   setCurrentStateWithId,
-} from '../redux/store'
-import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectCurrentState } from '../redux/store'
-import AddIcon from '@mui/icons-material/Add'
-import MemoryListItem from './MemoryListItem'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import AddMemoryForm from './AddMemoryForm'
-import { Memory } from '../redux/types'
-import { style } from './styles/styles'
+} from "../redux/store"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import { useDispatch, useSelector } from "react-redux"
+import { selectCurrentState } from "../redux/store"
+import AddIcon from "@mui/icons-material/Add"
+import MemoryListItem from "./MemoryListItem"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import AddMemoryForm from "./AddMemoryForm"
+import { Memory } from "../redux/types"
+import { style } from "./styles/styles"
 
-function MemoryList() {
+type MemoryListProps = {
+  handleEditMemoryToggle: () => void
+}
+
+function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
   const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false)
   const [expanded, setExpanded] = useState<number | false>(false)
   const currentState = useSelector(selectCurrentState)
   const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
+
+  // fix memoize when state changes
   const {
     data: memoriesDataFromQuery,
     error: memoriesError,
     isFetching: isFetchingMemories,
   } = useFetchMemoriesQuery(currentState)
-
-  const dispatch = useDispatch()
 
   // Memoize memories data from query
   const memoriesData = useMemo(() => {
@@ -65,7 +74,7 @@ function MemoryList() {
   let content = null
   if (isLoading || isFetchingMemories) {
     content = (
-      <Box sx={style.loadingProgress}>
+      <Box sx={style.loaderContainer}>
         <CircularProgress />
       </Box>
     )
@@ -78,29 +87,29 @@ function MemoryList() {
       // Check if there are memories
       // If there are no memories, display empty list message
       memoriesData?.length === 0 ? (
-        <Box id='no-memories-message' sx={style.emptylist}>
+        <Box id="no-memories-message" sx={style.emptylist}>
           No Memories Yet. Add One!
         </Box>
       ) : (
         // If there are memories, display memories
         <Box>
-          <Grid container id='modal-headers' sx={style.modalHeader}>
+          <Grid container id="modal-headers" sx={style.modalHeader}>
             <Grid item xs={3}>
-              <Typography fontWeight='bold' sx={{ flexShrink: 0 }}>
+              <Typography fontWeight="bold" sx={{ flexShrink: 0 }}>
                 Title
               </Typography>
             </Grid>
             <Grid item xs={3}>
-              <Typography fontWeight='bold'>City</Typography>
+              <Typography fontWeight="bold">City</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography fontWeight='bold'>Start Date</Typography>
+              <Typography fontWeight="bold">Start Date</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography fontWeight='bold'>End Date</Typography>
+              <Typography fontWeight="bold">End Date</Typography>
             </Grid>
           </Grid>
-          <Box id='memory-list-items'>
+          <Box id="memory-list-items">
             {memoriesData?.map((memory: Memory) => {
               return (
                 <MemoryListItem
@@ -109,6 +118,7 @@ function MemoryList() {
                   key={memory.id}
                   memory={memory}
                   handleLoading={handleLoading}
+                  handleEditMemoryToggle={handleEditMemoryToggle}
                 />
               )
             })}
@@ -118,12 +128,12 @@ function MemoryList() {
   }
 
   const defautContent = (
-    <Box id='modal-memory-content' sx={style.memorylist}>
+    <Box id="modal-memory-content" sx={style.memorylist}>
       <Box>
         <h3>Your Memories From {currentState.currentStateTitle}</h3>
       </Box>
       <Button
-        variant='contained'
+        variant="contained"
         sx={style.primaryButton}
         onClick={() => setIsAddMemoryModalOpen(!isAddMemoryModalOpen)}
         startIcon={<AddIcon />}
@@ -134,7 +144,7 @@ function MemoryList() {
   )
 
   return (
-    <Box id='memory-list'>
+    <Box id="memory-list">
       {isAddMemoryModalOpen ? null : defautContent}
       {content}
     </Box>

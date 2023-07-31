@@ -1,7 +1,7 @@
 import {
+  selectCurrentMemory,
   selectCurrentState,
-  setCurrentStateWithId,
-  useAddMemoryMutation,
+  useUpdateMemoryMutation,
 } from "../redux/store"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
@@ -11,72 +11,56 @@ import Typography from "@mui/material/Typography"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { useForm, Controller, SubmitHandler } from "react-hook-form"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { useDispatch, useSelector } from "react-redux"
-import { useAddStateMutation } from "../redux/store"
+import { useSelector } from "react-redux"
 import { style } from "./styles/styles"
-import dayjs from "dayjs"
 import { isBefore } from "date-fns"
+import dayjs from "dayjs"
 
-type AddMemoryFormProps = {
+type MemoryFormProps = {
   handleBackClick: () => void
 }
 
-type AddMemoryFormValues = {
+type MemoryFormValues = {
   title: string
   city: string
   startDate: Date | null
   endDate: Date
   description: string
 }
-
-function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
+function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
   const currentState = useSelector(selectCurrentState)
-  const [addMemory] = useAddMemoryMutation()
-  const [addState] = useAddStateMutation()
-  const dispatch = useDispatch()
+  const currentMemory = useSelector(selectCurrentMemory)
+  const [updateMemory] = useUpdateMemoryMutation()
 
-  const addMemoryForm = useForm<AddMemoryFormValues>({
+  const editMemoryForm = useForm<MemoryFormValues>({
     defaultValues: {
-      title: "",
-      city: "",
-      startDate: null,
-      endDate: dayjs().toDate(),
-      description: "",
+      title: currentMemory.title,
+      city: currentMemory.city,
+      startDate: dayjs(currentMemory.startDate).toDate(),
+      endDate: dayjs(currentMemory.endDate).toDate(),
+      description: currentMemory.description,
     },
   })
 
   const { control, register, handleSubmit, formState, getValues } =
-    addMemoryForm
+    editMemoryForm
   const { errors } = formState
 
-  const onSubmit: SubmitHandler<AddMemoryFormValues> = async (data) => {
-    if (currentState.totalStateMemoryCount <= 0) {
-      const addStateData = await addState({
-        name: currentState.currentStateTitle,
-        abbreviation: currentState.currentStateAbbreviation,
-      }).unwrap()
+  const onSubmit: SubmitHandler<MemoryFormValues> = async (data) => {
+    await updateMemory({
+      id: currentMemory.id,
+      userId: currentMemory.userId,
+      stateId: currentMemory.stateId,
+      ...data,
+    })
 
-      dispatch(setCurrentStateWithId({ id: addStateData.id }))
-
-      await addMemory({
-        ...data,
-        stateAbbreviation: currentState.currentStateAbbreviation,
-        stateId: addStateData.id,
-      })
-    } else {
-      await addMemory({
-        ...data,
-        stateAbbreviation: currentState.currentStateAbbreviation,
-        stateId: currentState.id,
-      })
-    }
     handleBackClick()
   }
 
   return (
     <Box sx={style.addMemoryForm}>
       <Typography component="h1" variant="h5" sx={{ mb: 4 }}>
-        {`Add Memory for ${currentState.currentStateTitle}`}
+        {`Edit Memory for ${currentState.currentStateTitle}`}
       </Typography>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -208,4 +192,4 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
   )
 }
 
-export default AddMemoryForm
+export default EditMemoryForm

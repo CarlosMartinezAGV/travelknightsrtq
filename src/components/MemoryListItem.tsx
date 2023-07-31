@@ -1,18 +1,23 @@
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import AccordionSummary from "@mui/material/AccordionSummary"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import {
   selectCurrentState,
   setTotalStateMemoryCount,
   useRemoveMemoryMutation,
   useRemoveStateMutation,
-} from '../redux/store'
-import { Box, Button, Grid, Typography } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
-import DeleteIcon from '@mui/icons-material/Delete'
-import Accordion from '@mui/material/Accordion'
-import { Memory } from '../redux/types'
-import { style } from './styles/styles'
+  setMemoryToEdit,
+} from "../redux/store"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import { useDispatch, useSelector } from "react-redux"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
+import Accordion from "@mui/material/Accordion"
+import { Memory } from "../redux/types"
+import { style } from "./styles/styles"
 type MemoryListItemProps = {
   memory: Memory
   expanded: number | false
@@ -20,6 +25,7 @@ type MemoryListItemProps = {
     panel: number
   ) => (event: React.SyntheticEvent, isExpanded: boolean) => void
   handleLoading: (isLoadingFlag: boolean) => void
+  handleEditMemoryToggle: () => void
 }
 
 function MemoryListItem({
@@ -27,6 +33,7 @@ function MemoryListItem({
   expanded,
   handleAccordionChange,
   handleLoading,
+  handleEditMemoryToggle,
 }: MemoryListItemProps) {
   const currentState = useSelector(selectCurrentState)
   const [removeMemory] = useRemoveMemoryMutation()
@@ -48,6 +55,11 @@ function MemoryListItem({
     handleLoading(false)
   }
 
+  const handleEditMemory = () => {
+    dispatch(setMemoryToEdit({ ...memory }))
+    handleEditMemoryToggle()
+  }
+
   return (
     <Accordion
       expanded={expanded === memory.id}
@@ -56,10 +68,10 @@ function MemoryListItem({
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls='panel1bh-content'
-        id='panel1bh-header'
+        aria-controls="panel1bh-content"
+        id="panel1bh-header"
       >
-        <Grid container id='modal-headers' sx={style.memorylistItemData}>
+        <Grid container id="modal-headers" sx={style.memorylistItemData}>
           <Grid item xs={3}>
             <Typography sx={{ flexShrink: 5 }}>{memory.title}</Typography>
           </Grid>
@@ -68,19 +80,19 @@ function MemoryListItem({
           </Grid>
           <Grid item xs={2}>
             <Typography sx={{ flexShrink: 0 }}>
-              {new Date(memory.startDate).toLocaleDateString('en-US')}
+              {new Date(memory.startDate).toLocaleDateString("en-US")}
             </Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography sx={{ flexShrink: 0 }}>
-              {new Date(memory.endDate).toLocaleDateString('en-US')}
+              {new Date(memory.endDate).toLocaleDateString("en-US")}
             </Typography>
           </Grid>
         </Grid>
       </AccordionSummary>
 
       <AccordionDetails sx={style.accordionDetailsContainer}>
-        <Typography fontWeight='bold'>
+        <Typography fontWeight="bold">
           Your trip went something like this:
         </Typography>
         <Typography sx={style.accordionDescriptionContainer}>
@@ -90,11 +102,18 @@ function MemoryListItem({
       <Box sx={style.deleteButtonContainer}>
         <Button
           onClick={handleDeleteMemory}
-          variant='outlined'
           startIcon={<DeleteIcon />}
-          color='error'
+          color="error"
         >
           Delete
+        </Button>
+        <Button
+          onClick={handleEditMemory}
+          variant="contained"
+          startIcon={<EditIcon />}
+          style={{ backgroundColor: "#848484", marginLeft: 6 }}
+        >
+          Edit
         </Button>
       </Box>
     </Accordion>

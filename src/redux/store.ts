@@ -1,19 +1,21 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { statesApi } from './api/statesApi'
-import { memoriesApi } from './api/memoriesApi'
-import { setupListeners } from '@reduxjs/toolkit/dist/query'
+import { configureStore } from "@reduxjs/toolkit"
+import { statesApi } from "./api/statesApi"
+import { memoriesApi } from "./api/memoriesApi"
+import { setupListeners } from "@reduxjs/toolkit/dist/query"
 import {
   stateReducer,
   setCurrentState,
   setCurrentStateWithId,
   setTotalStateMemoryCount,
-} from './slices/stateSlice'
+} from "./slices/stateSlice"
+import { memoryReducer, setMemoryToEdit } from "./slices/memorySlice"
 
 const store = configureStore({
   reducer: {
     [statesApi.reducerPath]: statesApi.reducer,
     [memoriesApi.reducerPath]: memoriesApi.reducer,
     currentState: stateReducer,
+    currentMemory: memoryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -31,16 +33,19 @@ export {
   setCurrentState,
   setCurrentStateWithId,
   setTotalStateMemoryCount,
+  setMemoryToEdit,
 }
 export {
-  useFetchStatesQuery,
   useAddStateMutation,
+  useFetchStatesQuery,
   useRemoveStateMutation,
-} from './api/statesApi'
+} from "./api/statesApi"
 export {
-  useFetchMemoriesQuery,
   useAddMemoryMutation,
+  useFetchMemoriesQuery,
+  useUpdateMemoryMutation,
   useRemoveMemoryMutation,
-} from './api/memoriesApi'
+} from "./api/memoriesApi"
 
 export const selectCurrentState = (state: RootState) => state.currentState
+export const selectCurrentMemory = (state: RootState) => state.currentMemory

@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useFetchStatesQuery } from '../../redux/store'
-import { setCurrentState } from '../../redux/store'
-import { useDispatch } from 'react-redux'
-import { Box, Modal } from '@mui/material'
-import { states } from './states'
-import '../styles/map.css'
-import { useState } from 'react'
-import MemoryList from '../MemoryList'
-import { style } from '../styles/styles'
+import { useFetchStatesQuery } from "../../redux/store"
+import { setCurrentState } from "../../redux/store"
+import { useDispatch } from "react-redux"
+import Modal from "@mui/material/Modal"
+import Box from "@mui/material/Box"
+import { states } from "./states"
+import "../styles/map.css"
+import { useState } from "react"
+import MemoryList from "../MemoryList"
+import { style } from "../styles/styles"
+import EditMemoryForm from "../EditMemoryForm"
+import AbsoluteLoader from "../AbsoluteLoader"
 
 function Map() {
-  const { data } = useFetchStatesQuery()
+  const { data, isLoading } = useFetchStatesQuery()
   const [isShowModal, setIsShowModal] = useState(false)
+  const [isShowEditMemory, setIsShowEditMemory] = useState(false)
   const dispatch = useDispatch()
 
   const handleModalOpen = (
@@ -33,15 +37,22 @@ function Map() {
     setIsShowModal(false)
   }
 
+  const handleEditMemoryToggle = () => {
+    setIsShowEditMemory(!isShowEditMemory)
+  }
   const modal = isShowModal ? (
     <Modal
       open={isShowModal}
       onClose={handleModalClose}
-      aria-labelledby='modal-modal-title'
-      aria-describedby='modal-modal-description'
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
       <Box sx={style.modal}>
-        <MemoryList />
+        {isShowEditMemory ? (
+          <EditMemoryForm handleBackClick={handleEditMemoryToggle} />
+        ) : (
+          <MemoryList handleEditMemoryToggle={handleEditMemoryToggle} />
+        )}
       </Box>
     </Modal>
   ) : null
@@ -59,7 +70,7 @@ function Map() {
       })
 
       // Add visited class if state is in state
-      const stateVisitedClass = isVisited ? className + ' visited' : className
+      const stateVisitedClass = isVisited ? className + " visited" : className
       return (
         <path
           key={stateAbbreviation}
@@ -76,16 +87,22 @@ function Map() {
 
   return (
     <>
-      <svg
-        id='USMap'
-        viewBox='70 -5 1200 750'
-        xmlns='http://www.w3.org/2000/svg'
-        xmlnsXlink='http://www.w3.org/1999/xlink'
-        version='1.1'
-      >
-        <g>{renderedStates}</g>
-      </svg>
-      {modal}
+      {isLoading ? (
+        <AbsoluteLoader />
+      ) : (
+        <>
+          <svg
+            id="USMap"
+            viewBox="70 -5 1200 750"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            version="1.1"
+          >
+            <g>{renderedStates}</g>
+          </svg>
+          {modal}
+        </>
+      )}
     </>
   )
 }
