@@ -1,8 +1,8 @@
 // '@reduxjs/toolkit/query/react' creates the custom hooks
 // '@reduxjs/toolkit/query' does not create the custom hooks
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { BASE_URL, USER } from "../user"
-import { CurrentState, Memory } from "../types"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { BASE_URL, USER } from "../user";
+import { CurrentState, Memory } from "../types";
 /*
     3 required properties:
 
@@ -39,7 +39,7 @@ const memoriesApi = createApi({
               userId: USER.id,
               stateId: memory.stateId,
             },
-          }
+          };
         },
       }),
       fetchMemories: builder.query<Memory[], CurrentState>({
@@ -56,7 +56,7 @@ const memoriesApi = createApi({
                 })),
                 { type: "Memory", id: "LIST" },
               ]
-            : [{ type: "Memory", id: "LIST" }]
+            : [{ type: "Memory", id: "LIST" }];
         },
         query: (state) => {
           return {
@@ -66,7 +66,7 @@ const memoriesApi = createApi({
               stateId: state.id,
             },
             method: "GET",
-          }
+          };
         },
       }),
       updateMemory: builder.mutation({
@@ -84,28 +84,21 @@ const memoriesApi = createApi({
               userId: USER.id,
               stateId: memory.stateId,
             },
-          }
+          };
         },
       }),
       removeMemory: builder.mutation({
-        /*
-          Album is passed but for invalidatesTags we only need the userId
-          so we can use the userId from the album object
-          to invalidate the Album tag
-          But, when we don't have the album object, we can use the
-          result object to get the userId
-        */
         invalidatesTags: (memory) => [{ type: "Memory", id: memory.id }],
         query: (memory) => {
           return {
             url: `/memories/${memory.id}`,
             method: "DELETE",
-          }
+          };
         },
       }),
-    }
+    };
   },
-})
+});
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
@@ -114,5 +107,5 @@ export const {
   useFetchMemoriesQuery,
   useUpdateMemoryMutation,
   useRemoveMemoryMutation,
-} = memoriesApi
-export { memoriesApi }
+} = memoriesApi;
+export { memoriesApi };

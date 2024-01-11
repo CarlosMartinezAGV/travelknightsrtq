@@ -11,8 +11,6 @@ import { State } from "../types"
     endpoints: an object containing endpoint definitions
 
 */
-
-// FIXME: FIX TAGS FOR FETCHSTATE
 const statesApi = createApi({
   reducerPath: "states",
   baseQuery: fetchBaseQuery({
@@ -84,13 +82,6 @@ const statesApi = createApi({
         },
       }),
       removeState: builder.mutation({
-        /*
-            Album is passed but for invalidatesTags we only need the userId
-            so we can use the userId from the album object
-            to invalidate the Album tag
-            But, when we don't have the album object, we can use the
-            result object to get the userId
-          */
         invalidatesTags: () => [{ type: "States", id: "LIST" }],
         query: (stateId) => {
           return {
