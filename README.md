@@ -16,5 +16,5 @@ Live Demo:
 To run project:
 
 1. Clone the repo
-2. Run `npm install` in the root folder
-3. Run `npm start` in the root folder
+2. Run `npm install`
+3. Run `npm start`
