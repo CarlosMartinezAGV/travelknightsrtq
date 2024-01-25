@@ -11,8 +11,7 @@
   "tasks": {
     "start": {
       "name": "start",
-      "command": "npm run start",
-      "runAtStart": false
+      "command": "npm run start"
     },
     "dev": {
       "name": "dev",
@@ -25,22 +24,22 @@
     "server": {
       "name": "server",
       "command": "npm run server",
-      "runAtStart": true
+      "runAtStart": true,
+      "preview": {
+        "port": 3001
+      }
     },
     "build": {
       "name": "build",
-      "command": "npm run build",
-      "runAtStart": false
+      "command": "npm run build"
     },
     "lint": {
       "name": "lint",
-      "command": "npm run lint",
-      "runAtStart": false
+      "command": "npm run lint"
     },
     "preview": {
       "name": "preview",
-      "command": "npm run preview",
-      "runAtStart": false
+      "command": "npm run preview"
     }
   }
 }
