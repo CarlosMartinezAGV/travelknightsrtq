@@ -3,5 +3,4 @@ export const USER = {
   name: "John Doe",
 };
 
-export const BASE_URL =
-  "https://travelknightsrtqserver-jyz1ukdec-carlosmartinezagv.vercel.app/";
+export const BASE_URL = "https://travelknightsrtqserver.vercel.app/";
