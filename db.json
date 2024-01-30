@@ -1,0 +1,23 @@
+{
+  "users": [],
+  "states": [
+    {
+      "id": "64f0",
+      "userId": 1,
+      "name": "Wyoming",
+      "abbreviation": "US-WY"
+    }
+  ],
+  "memories": [
+    {
+      "title": "sada",
+      "city": "asda",
+      "startDate": "2024-01-16T05:00:00.000Z",
+      "endDate": "2024-01-30T21:05:43.236Z",
+      "description": "asdasdadqwe kjqwhekqhweqwe kjqhwekjqhwe qjkwhekjqhe jqwhekqhw hwjew we we e. e e jwhejhq wejhq jqwhe jqhw e hjqweh qwjeh qjweh qjwheqe",
+      "userId": 1,
+      "stateId": "64f0",
+      "id": "e42a"
+    }
+  ]
+}

@@ -2,35 +2,36 @@ import {
   selectCurrentMemory,
   selectCurrentState,
   useUpdateMemoryMutation,
-} from "../redux/store"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Grid from "@mui/material/Grid"
-import TextField from "@mui/material/TextField"
-import Typography from "@mui/material/Typography"
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
-import { useForm, Controller, SubmitHandler } from "react-hook-form"
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { useSelector } from "react-redux"
-import { style } from "./styles/styles"
-import { isBefore } from "date-fns"
-import dayjs from "dayjs"
+} from "../redux/store";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useSelector } from "react-redux";
+import { style } from "./styles/styles";
+import { isBefore } from "date-fns";
+import dayjs from "dayjs";
+import { Stack } from "@mui/material";
 
 type MemoryFormProps = {
-  handleBackClick: () => void
-}
+  handleBackClick: () => void;
+};
 
 type MemoryFormValues = {
-  title: string
-  city: string
-  startDate: Date | null
-  endDate: Date
-  description: string
-}
+  title: string;
+  city: string;
+  startDate: Date | null;
+  endDate: Date;
+  description: string;
+};
 function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
-  const currentState = useSelector(selectCurrentState)
-  const currentMemory = useSelector(selectCurrentMemory)
-  const [updateMemory] = useUpdateMemoryMutation()
+  const currentState = useSelector(selectCurrentState);
+  const currentMemory = useSelector(selectCurrentMemory);
+  const [updateMemory] = useUpdateMemoryMutation();
 
   const editMemoryForm = useForm<MemoryFormValues>({
     defaultValues: {
@@ -40,11 +41,11 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
       endDate: dayjs(currentMemory.endDate).toDate(),
       description: currentMemory.description,
     },
-  })
+  });
 
   const { control, register, handleSubmit, formState, getValues } =
-    editMemoryForm
-  const { errors } = formState
+    editMemoryForm;
+  const { errors } = formState;
 
   const onSubmit: SubmitHandler<MemoryFormValues> = async (data) => {
     await updateMemory({
@@ -52,13 +53,13 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
       userId: currentMemory.userId,
       stateId: currentMemory.stateId,
       ...data,
-    })
+    });
 
-    handleBackClick()
-  }
+    handleBackClick();
+  };
 
   return (
-    <Box sx={style.addMemoryForm}>
+    <Stack alignItems="center">
       <Typography component="h1" variant="h5" sx={{ mb: 4 }}>
         {`Edit Memory for ${currentState.currentStateTitle}`}
       </Typography>
@@ -98,14 +99,14 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
                   required: "required*",
                   validate: {
                     endDateAfterStartDate: (startDateValue) => {
-                      const endDateValue = getValues("endDate")
+                      const endDateValue = getValues("endDate");
                       if (startDateValue && endDateValue) {
                         return (
                           isBefore(startDateValue, endDateValue) ||
                           "Start Date must be before End Date"
-                        )
+                        );
                       }
-                      return true // Return true if either value is null
+                      return true; // Return true if either value is null
                     },
                   },
                 }}
@@ -167,12 +168,7 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
             />
           </Grid>
           <Grid item xs={12}>
-            <Box sx={style.errorMessageContainer}>
-              <Typography>
-                {/* {isErrorMessage && 'Please fill out all fields!'} */}
-              </Typography>
-            </Box>
-            <Box sx={style.addMemoryFormButtonLayout}>
+            <Stack direction="row" justifyContent="flex-end">
               <Button onClick={handleBackClick} sx={style.secondaryButton}>
                 Back
               </Button>
@@ -184,12 +180,12 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
               >
                 Submit
               </Button>
-            </Box>
+            </Stack>
           </Grid>
         </Grid>
       </form>
-    </Box>
-  )
+    </Stack>
+  );
 }
 
-export default EditMemoryForm
+export default EditMemoryForm;

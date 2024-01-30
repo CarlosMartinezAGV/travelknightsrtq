@@ -1,13 +1,18 @@
-import CircularProgress from "@mui/material/CircularProgress"
-import { style } from "./styles/styles"
-import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress";
+import { style } from "./styles/styles";
+import { Stack } from "@mui/material";
 
 function AbsoluteLoader() {
   return (
-    <Box sx={style.absoluteLoaderContainer}>
+    <Stack
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+      sx={style.absoluteLoaderContainer}
+    >
       <CircularProgress color="success" />
-    </Box>
-  )
+    </Stack>
+  );
 }
 
-export default AbsoluteLoader
+export default AbsoluteLoader;
