@@ -1,56 +1,48 @@
-const primaryBackgroundColor = "#faf0ca";
+import { createTheme } from "@mui/material/styles";
+
+export const PRIMARYCOLOR = "#65743a";
+export const SECONDARYCOLOR = "#faf0ca";
+export const TERTIARYCOLOR = "#6C9C18";
+export const QUATERNARYCOLOR = "#F9F3E0";
+export const QUINARYCOLOR = "#000";
+export const SENARYCOLOR = "#f4f4f4";
+
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: PRIMARYCOLOR,
+      light: SECONDARYCOLOR,
+      dark: TERTIARYCOLOR,
+    },
+    background: {
+      default: SECONDARYCOLOR,
+    },
+  },
+  components: {
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: SECONDARYCOLOR,
+        },
+      },
+    },
+  },
+});
 
 export const style = {
   accordionContainer: {
-    width: "100%",
     border: "3px solid",
-    borderColor: "#65743a",
+    borderColor: TERTIARYCOLOR,
     borderRadius: "0.2rem",
-    bgcolor: "#F9F3E0",
+    bgcolor: QUATERNARYCOLOR,
     marginBottom: "0.25rem",
   },
-  accordionDetailsContainer: { borderTop: "3px solid #65743a" },
-  backgroundColorPrimary: {
-    bgcolor: primaryBackgroundColor,
-  },
-  backgroundColorSecondary: {
-    bgcolor: "#F9F3E0",
-  },
-  mainPage: {
-    bgcolor: primaryBackgroundColor,
-    pt: 14,
-    display: "flex",
-  },
-  modal: {
-    position: "absolute",
-    maxWidth: "100%",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: primaryBackgroundColor,
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  },
+  accordionDetailsContainer: { borderTop: `3px solid ${TERTIARYCOLOR}` },
   absoluteLoaderContainer: {
     zIndex: 9999,
     position: "fixed",
     inset: 0,
     opacity: 0.25,
-    backgroundColor: "#000000",
-  },
-  memorylist: {
-    width: "100%",
-    margin: "0.5rem",
-    paddingBottom: "0.5rem",
-  },
-  primaryButton: {
-    "&:hover": {
-      backgroundColor: "#6C9C18",
-    },
-    ml: 1,
-  },
-  secondaryButton: {
-    ml: 1,
+    backgroundColor: QUINARYCOLOR,
   },
 };

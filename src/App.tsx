@@ -1,35 +1,30 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import CssBaseline from "@mui/material/CssBaseline"
-import { style } from "./components/styles/styles"
-import ToolBar from "./components/ToolBar"
-import AppBar from "@mui/material/AppBar"
-import MapPage from "./pages/MapPage"
-import Box from "@mui/material/Box"
-import "./app.css"
-
-// Create a custom theme with the desired focused color
-// Allows us to use the theme in our components
-// Green is main color
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#65743a",
-    },
-  },
-})
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { theme } from "./components/styles/styles";
+import ToolBar from "./components/ToolBar";
+import AppBar from "@mui/material/AppBar";
+import MapPage from "./pages/MapPage";
+import { Stack } from "@mui/material";
+import "./app.css";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Box id="main-page" sx={style.mainPage}>
+      <Stack
+        id="main-page"
+        alignItems={"center"}
+        minHeight={"100dvh"}
+        minWidth={"100dvw"}
+        pt={10}
+      >
         <CssBaseline />
         <AppBar>
           <ToolBar />
         </AppBar>
         <MapPage />
-      </Box>
+      </Stack>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

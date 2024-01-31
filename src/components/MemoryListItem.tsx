@@ -8,12 +8,9 @@ import {
   useRemoveStateMutation,
   setMemoryToEdit,
 } from "../redux/store";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import Accordion from "@mui/material/Accordion";
 import { Memory } from "../redux/types";
 import { style } from "./styles/styles";
@@ -71,13 +68,15 @@ function MemoryListItem({
         aria-controls="panel1bh-content"
         id="panel1bh-header"
       >
-        <Stack direction="row" spacing={2} sx={{ width: "100%", minWidth: 0 }}>
-          <Typography noWrap flex={1}>
-            {memory.title}
-          </Typography>
-          <Typography noWrap flex={1}>
-            {memory.city}
-          </Typography>
+        <Stack
+          id="accordion-headers"
+          direction="row"
+          justifyContent="center"
+          width={1}
+          spacing={2}
+        >
+          <Typography flex={1}>{memory.title}</Typography>
+          <Typography flex={1}>{memory.city}</Typography>
           <Typography flex={1}>
             {new Date(memory.startDate).toLocaleDateString("en-US")}
           </Typography>
@@ -92,15 +91,17 @@ function MemoryListItem({
         </Typography>
         <Typography>{memory.description}</Typography>
       </AccordionDetails>
-      <Stack direction="row" justifyContent="center" alignItems="center" mb={1}>
+      <Stack
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        mb={2}
+      >
         <Button onClick={handleDeleteMemory} color="error">
           Delete
         </Button>
-        <Button
-          onClick={handleEditMemory}
-          variant="contained"
-          style={{ backgroundColor: "#848484", marginLeft: 6 }}
-        >
+        <Button onClick={handleEditMemory} variant="outlined" color="primary">
           Edit
         </Button>
       </Stack>

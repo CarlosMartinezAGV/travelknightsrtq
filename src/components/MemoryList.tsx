@@ -6,16 +6,13 @@ import {
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentState } from "../redux/store";
-import AddIcon from "@mui/icons-material/Add";
 import MemoryListItem from "./MemoryListItem";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AddMemoryForm from "./AddMemoryForm";
 import { Memory } from "../redux/types";
-import { style } from "./styles/styles";
 import { Stack } from "@mui/material";
 
 type MemoryListProps = {
@@ -36,23 +33,20 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
     isFetching: isFetchingMemories,
   } = useFetchMemoriesQuery(currentState);
 
-  // Memoize memories data from query
-  const memoriesData = useMemo(() => {
-    return memoriesDataFromQuery;
-  }, [memoriesDataFromQuery]);
-
   // Set total state memory count
   // Set current state from first memory stateId
   useEffect(() => {
-    if (memoriesData && memoriesData.length > 0) {
-      dispatch(setCurrentStateWithId({ id: memoriesData[0].stateId }));
+    if (memoriesDataFromQuery && memoriesDataFromQuery.length > 0) {
+      dispatch(setCurrentStateWithId({ id: memoriesDataFromQuery[0].stateId }));
       dispatch(
-        setTotalStateMemoryCount({ totalStateMemoryCount: memoriesData.length })
+        setTotalStateMemoryCount({
+          totalStateMemoryCount: memoriesDataFromQuery.length,
+        })
       );
     } else {
       dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }));
     }
-  }, [dispatch, memoriesData]);
+  }, [dispatch, memoriesDataFromQuery]);
 
   const handleAddMemory = () => {
     setIsAddMemoryModalOpen(!isAddMemoryModalOpen);
@@ -80,14 +74,18 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
       </Stack>
     );
   } else if (memoriesError) {
-    content = <Box>Error Loading Memories...</Box>;
+    content = (
+      <Stack justifyContent="center" alignItems="center">
+        Error Loading Memories...
+      </Stack>
+    );
   } else if (isAddMemoryModalOpen) {
     content = <AddMemoryForm handleBackClick={handleAddMemory} />;
   } else {
     content =
       // Check if there are memories
       // If there are no memories, display empty list message
-      memoriesData?.length === 0 ? (
+      memoriesDataFromQuery?.length === 0 ? (
         <Stack
           justifyContent="center"
           alignItems="center"
@@ -120,7 +118,7 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
               End Date
             </Typography>
           </Stack>
-          {memoriesData?.map((memory: Memory) => {
+          {memoriesDataFromQuery?.map((memory: Memory) => {
             return (
               <MemoryListItem
                 expanded={expanded}
@@ -137,27 +135,29 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
   }
 
   const defautModalContent = !isAddMemoryModalOpen && (
-    <Stack id="modal-memory-content" alignItems="center" sx={style.memorylist}>
-      <Box sx={{ flex: 1, m: 0 }}>
-        <h3>Your Memories From {currentState.currentStateTitle}</h3>
+    <>
+      <Box flex={1}>
+        <Typography mb={2.5} variant="h5">
+          Your Memories From {currentState.currentStateTitle}
+        </Typography>
       </Box>
       <Box flex={1} ml="auto" pr={0.5}>
         <Button
           variant="contained"
-          sx={style.primaryButton}
           onClick={() => setIsAddMemoryModalOpen(!isAddMemoryModalOpen)}
         >
           Add Memory
         </Button>
       </Box>
-    </Stack>
+    </>
   );
 
   return (
-    <Box id="memory-list">
+    <Stack justifyContent="center" alignItems="center" id="memory-list">
       {defautModalContent}
+      <Box m={1.5} />
       {content}
-    </Box>
+    </Stack>
   );
 }
 

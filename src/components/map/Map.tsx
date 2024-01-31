@@ -1,20 +1,28 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useFetchStatesQuery } from "../../redux/store";
+import RenderedSVGStates from "./RenderedSVGStates";
 import { setCurrentState } from "../../redux/store";
-import { useDispatch } from "react-redux";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import "../styles/map.css";
-import { useState } from "react";
-import MemoryList from "../MemoryList";
-import { style } from "../styles/styles";
 import EditMemoryForm from "../EditMemoryForm";
 import AbsoluteLoader from "../AbsoluteLoader";
-import RenderedSVGStates from "./RenderedSVGStates";
+import { useDispatch } from "react-redux";
+import MemoryList from "../MemoryList";
+import { useState } from "react";
+import "../styles/map.css";
+import {
+  AppBar,
+  Box,
+  Dialog,
+  DialogContent,
+  Fade,
+  IconButton,
+  Toolbar,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 function Map() {
   const { data, isLoading } = useFetchStatesQuery();
-  const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowDialog, setIsShowDialog] = useState(false);
   const [isShowEditMemory, setIsShowEditMemory] = useState(false);
   const dispatch = useDispatch();
 
@@ -23,7 +31,7 @@ function Map() {
     currentStateAbbreviation: string,
     currentStateTitle: string
   ) => {
-    setIsShowModal(true);
+    setIsShowDialog(true);
     dispatch(
       setCurrentState({
         id,
@@ -34,28 +42,54 @@ function Map() {
   };
 
   const handleModalClose = () => {
-    setIsShowModal(false);
+    setIsShowDialog(false);
     setIsShowEditMemory(false);
   };
 
   const handleEditMemoryToggle = () => {
     setIsShowEditMemory(!isShowEditMemory);
   };
-  const modal = isShowModal && (
-    <Modal
-      open={isShowModal}
+
+  // Theme and full screen for dialog modal on mobile
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const dialog = isShowDialog && (
+    <Dialog
+      fullScreen={fullScreen}
+      fullWidth
+      maxWidth="md"
+      open={isShowDialog}
       onClose={handleModalClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby="memory-list-title"
+      aria-describedby="memory-list-description"
     >
-      <Box sx={style.modal}>
-        {isShowEditMemory ? (
-          <EditMemoryForm handleBackClick={handleEditMemoryToggle} />
-        ) : (
-          <MemoryList handleEditMemoryToggle={handleEditMemoryToggle} />
-        )}
-      </Box>
-    </Modal>
+      <Fade in={isShowDialog}>
+        <Box>
+          {fullScreen && (
+            <AppBar sx={{ position: "relative" }}>
+              <Toolbar sx={{ justifyContent: "flex-end" }}>
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  onClick={handleModalClose}
+                  aria-label="close"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Toolbar>
+            </AppBar>
+          )}
+          <DialogContent>
+            {isShowEditMemory ? (
+              <EditMemoryForm handleBackClick={handleEditMemoryToggle} />
+            ) : (
+              <MemoryList handleEditMemoryToggle={handleEditMemoryToggle} />
+            )}
+          </DialogContent>
+        </Box>
+      </Fade>
+    </Dialog>
   );
 
   return (
@@ -74,9 +108,9 @@ function Map() {
           >
             <RenderedSVGStates data={data} handleModalOpen={handleModalOpen} />
           </svg>
-          {modal}
         </>
       )}
+      {dialog}
     </>
   );
 }

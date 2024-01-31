@@ -13,7 +13,6 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useDispatch, useSelector } from "react-redux";
 import { useAddStateMutation } from "../redux/store";
-import { style } from "./styles/styles";
 import dayjs from "dayjs";
 import { isBefore } from "date-fns";
 import { Stack } from "@mui/material";
@@ -185,16 +184,9 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
             />
           </Grid>
           <Grid item xs={12}>
-            <Stack direction="row" justifyContent="flex-end">
-              <Button onClick={handleBackClick} sx={style.secondaryButton}>
-                Back
-              </Button>
-
-              <Button
-                type="submit"
-                variant="contained"
-                sx={style.primaryButton}
-              >
+            <Stack direction="row" spacing={1} pl={1} justifyContent="flex-end">
+              <Button onClick={handleBackClick}>Back</Button>
+              <Button type="submit" variant="contained">
                 Submit
               </Button>
             </Stack>

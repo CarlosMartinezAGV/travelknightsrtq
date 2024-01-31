@@ -12,7 +12,6 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useSelector } from "react-redux";
-import { style } from "./styles/styles";
 import { isBefore } from "date-fns";
 import dayjs from "dayjs";
 import { Stack } from "@mui/material";
@@ -65,7 +64,7 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
       </Typography>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Grid container spacing={2} justifyContent="space-between">
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
           <Grid item xs={12}>
             <TextField
               {...register("title", { required: "required*" })}
@@ -144,6 +143,7 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
                         textField: {
                           error: !!errors?.endDate,
                           helperText: errors.endDate && errors.endDate?.message,
+                          // sx: {
                         },
                       }}
                     />
@@ -168,16 +168,16 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
             />
           </Grid>
           <Grid item xs={12}>
-            <Stack direction="row" justifyContent="flex-end">
-              <Button onClick={handleBackClick} sx={style.secondaryButton}>
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+              spacing={1.5}
+            >
+              <Button onClick={handleBackClick} variant="outlined">
                 Back
               </Button>
-
-              <Button
-                type="submit"
-                variant="contained"
-                sx={style.primaryButton}
-              >
+              <Button type="submit" variant="contained">
                 Submit
               </Button>
             </Stack>
