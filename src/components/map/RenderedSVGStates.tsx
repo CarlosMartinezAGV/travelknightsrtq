@@ -1,4 +1,4 @@
-import { State } from "../../redux/types";
+import { State } from "../../redux/slices/states/types";
 import { states } from "./states";
 
 type RenderedSVGStatesProps = {

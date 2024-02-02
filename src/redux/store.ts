@@ -1,51 +1,74 @@
-import { configureStore } from "@reduxjs/toolkit"
-import { statesApi } from "./api/statesApi"
-import { memoriesApi } from "./api/memoriesApi"
-import { setupListeners } from "@reduxjs/toolkit/dist/query"
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
   stateReducer,
   setCurrentState,
   setCurrentStateWithId,
   setTotalStateMemoryCount,
-} from "./slices/stateSlice"
-import { memoryReducer, setMemoryToEdit } from "./slices/memorySlice"
+} from "./slices/states/stateSlice";
+import { memoryReducer, setMemoryToEdit } from "./slices/memories/memorySlice";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { apiSlice } from "./api/apiSlice";
+import authReducer from "./slices/auth/authSlice";
 
-const store = configureStore({
-  reducer: {
-    [statesApi.reducerPath]: statesApi.reducer,
-    [memoriesApi.reducerPath]: memoriesApi.reducer,
-    currentState: stateReducer,
-    currentMemory: memoryReducer,
-  },
+const persistConfig = {
+  key: "root",
+  version: 1,
+  storage,
+  whitelist: ["auth"],
+};
+
+const rootReducer = combineReducers({
+  [apiSlice.reducerPath]: apiSlice.reducer,
+  currentState: stateReducer,
+  currentMemory: memoryReducer,
+  auth: authReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(statesApi.middleware)
-      .concat(memoriesApi.middleware),
-})
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(apiSlice.middleware),
+  devTools: true,
+});
 
-// Connect API to store
-// one time setup per application load
-setupListeners(store.dispatch)
+// Export the store and the persistor
+export const persistor = persistStore(store);
+export type RootState = ReturnType<typeof store.getState>;
 
-export type RootState = ReturnType<typeof store.getState>
+// Reducers
 export {
-  store,
   setCurrentState,
   setCurrentStateWithId,
   setTotalStateMemoryCount,
   setMemoryToEdit,
-}
+};
 export {
   useAddStateMutation,
   useFetchStatesQuery,
   useRemoveStateMutation,
-} from "./api/statesApi"
+} from "./slices/states/statesApi";
 export {
   useAddMemoryMutation,
   useFetchMemoriesQuery,
   useUpdateMemoryMutation,
   useRemoveMemoryMutation,
-} from "./api/memoriesApi"
+} from "./slices/memories/memoriesApi";
 
-export const selectCurrentState = (state: RootState) => state.currentState
-export const selectCurrentMemory = (state: RootState) => state.currentMemory
+export const selectCurrentState = (state: RootState) => state.currentState;
+export const selectCurrentMemory = (state: RootState) => state.currentMemory;

@@ -1,24 +1,8 @@
-export type State = {
-  id: number
-  name: string
-  abbreviation: string
-  userId: number
-}
-
-export type Memory = {
-  id: number
-  title: string
-  city: string
-  description: string
-  startDate: string
-  endDate: string
-  userId: number
-  stateId: number
-}
+// TODO 1: Refactor logic for current state
 
 export type CurrentState = {
-  id: number
-  currentStateAbbreviation: string
-  currentStateTitle: string
-  totalStateMemoryCount: number
-}
+  id: number;
+  currentStateAbbreviation: string;
+  currentStateTitle: string;
+  totalStateMemoryCount: number;
+};

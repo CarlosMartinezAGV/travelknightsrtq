@@ -1,22 +1,8 @@
-// '@reduxjs/toolkit/query/react' creates the custom hooks
-// '@reduxjs/toolkit/query' does not create the custom hooks
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BASE_URL, USER } from "../user";
-import { CurrentState, Memory } from "../types";
-/*
-    3 required properties:
+import { USER } from "../../utils";
+import { apiSlice } from "../../api/apiSlice";
+import { TMemory } from "./types";
 
-    reducerPath: a string that will be used as the prefix for generated action types
-    baseQuery: a function that takes an object containing the query and returns a Promise that resolves to the data
-    endpoints: an object containing endpoint definitions
-
-*/
-const memoriesApi = createApi({
-  reducerPath: "memories",
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
-  }),
-  tagTypes: ["Memory"],
+export const memoriesApi = apiSlice.injectEndpoints({
   endpoints(builder) {
     return {
       addMemory: builder.mutation({
@@ -42,14 +28,14 @@ const memoriesApi = createApi({
           };
         },
       }),
-      fetchMemories: builder.query<Memory[], CurrentState>({
+      fetchMemories: builder.query({
         // Provide the data hook builder with a providedTags option
         // to specify which tags should be provided to the data hook
         // when the query is fulfilled
         providesTags: (result, _error, state) => {
           return result
             ? [
-                ...result.map((memory) => ({
+                ...result.map((memory: TMemory) => ({
                   type: "Memory" as const,
                   id: memory.id,
                   stateAbbreviationId: state.currentStateAbbreviation,
@@ -108,4 +94,3 @@ export const {
   useUpdateMemoryMutation,
   useRemoveMemoryMutation,
 } = memoriesApi;
-export { memoriesApi };

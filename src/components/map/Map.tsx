@@ -24,6 +24,7 @@ function Map() {
   const { data, isLoading } = useFetchStatesQuery();
   const [isShowDialog, setIsShowDialog] = useState(false);
   const [isShowEditMemory, setIsShowEditMemory] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleModalOpen = (
@@ -47,7 +48,7 @@ function Map() {
   };
 
   const handleEditMemoryToggle = () => {
-    setIsShowEditMemory(!isShowEditMemory);
+    setIsShowEditMemory((prev) => !prev);
   };
 
   // Theme and full screen for dialog modal on mobile

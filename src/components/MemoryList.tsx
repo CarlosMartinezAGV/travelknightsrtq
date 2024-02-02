@@ -12,7 +12,6 @@ import { selectCurrentState } from "../redux/store";
 import MemoryListItem from "./MemoryListItem";
 import { useCallback, useEffect, useState } from "react";
 import AddMemoryForm from "./AddMemoryForm";
-import { Memory } from "../redux/types";
 import { Stack } from "@mui/material";
 
 type MemoryListProps = {
@@ -118,7 +117,7 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
               End Date
             </Typography>
           </Stack>
-          {memoriesDataFromQuery?.map((memory: Memory) => {
+          {memoriesDataFromQuery?.map((memory) => {
             return (
               <MemoryListItem
                 expanded={expanded}

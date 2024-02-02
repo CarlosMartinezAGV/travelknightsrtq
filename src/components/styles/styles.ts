@@ -7,6 +7,8 @@ export const QUATERNARYCOLOR = "#F9F3E0";
 export const QUINARYCOLOR = "#000";
 export const SENARYCOLOR = "#f4f4f4";
 
+export const ERRORCOLOR = "#d32f2f";
+
 export const theme = createTheme({
   palette: {
     primary: {

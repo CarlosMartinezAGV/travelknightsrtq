@@ -1,28 +1,26 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import RequireAuth from "./redux/slices/auth/RequireAuth";
 import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "./components/styles/styles";
-import ToolBar from "./components/ToolBar";
-import AppBar from "@mui/material/AppBar";
+
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import MapPage from "./pages/MapPage";
-import { Stack } from "@mui/material";
-import "./app.css";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Stack
-        id="main-page"
-        alignItems={"center"}
-        minHeight={"100dvh"}
-        minWidth={"100dvw"}
-        pt={10}
-      >
-        <CssBaseline />
-        <AppBar>
-          <ToolBar />
-        </AppBar>
-        <MapPage />
-      </Stack>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+
+          {/* protected routes */}
+          <Route element={<RequireAuth />}>
+            <Route path="/map" element={<MapPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
