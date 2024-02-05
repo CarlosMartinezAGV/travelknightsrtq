@@ -46,7 +46,7 @@ export const memoriesApi = apiSlice.injectEndpoints({
         },
         query: (state) => {
           return {
-            url: "/memories",
+            url: "/rest/v1/memories?select=*",
             params: {
               userId: USER.id,
               stateId: state.id,

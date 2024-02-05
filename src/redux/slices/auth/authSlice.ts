@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-import { authApiSlice } from "./authApiSlice";
+import { AuthTokenResponseData } from "./types";
 
-const initialState = {
+const initialState: AuthTokenResponseData = {
   user: null,
-  access_token: null,
-  refresh_token: null,
+  session: null,
 };
 
 const authSlice = createSlice({
@@ -13,27 +12,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      return {
-        ...state,
-        ...action.payload.data,
-      };
+      state.user = action.payload.user;
+      state.session = action.payload.session;
     },
-    logout: () => {
-      return {
-        ...initialState,
-      };
+    logout: (state) => {
+      state.user = null;
+      state.session = null;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      authApiSlice.endpoints.login.matchFulfilled,
-      (state, action) => {
-        return {
-          ...state,
-          ...action.payload.data,
-        };
-      }
-    );
   },
 });
 
@@ -41,5 +26,6 @@ export const { setCredentials, logout } = authSlice.actions;
 export default authSlice.reducer;
 
 export const selectCurrentAccessToken = (state: RootState) =>
-  state.auth.access_token;
+  state.auth.session?.access_token;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectCurrentAuth = (state: RootState) => state.auth;

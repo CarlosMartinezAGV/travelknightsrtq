@@ -1,9 +1,9 @@
-import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
 import ToolBar from "../components/ToolBar";
 import AppBar from "@mui/material/AppBar";
-import { Stack } from "@mui/material";
 import Map from "../components/map/Map";
+import { Stack } from "@mui/material";
 
 function MapPage() {
   return (
@@ -17,7 +17,12 @@ function MapPage() {
       <AppBar>
         <ToolBar />
       </AppBar>
-      <Container id="map-page" component="main" maxWidth="xl">
+      <Container
+        id="map-page"
+        component="main"
+        maxWidth="xl"
+        sx={{ paddingTop: 12 }}
+      >
         <Map />
       </Container>
     </Stack>

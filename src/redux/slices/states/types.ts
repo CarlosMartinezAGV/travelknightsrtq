@@ -1,6 +1,3 @@
-export type TState = {
-  id: number;
-  name: string;
-  abbreviation: string;
-  userId: string;
-};
+import { Tables } from "../../../supabase/types/supabase";
+
+export type TState = Tables<"states">;

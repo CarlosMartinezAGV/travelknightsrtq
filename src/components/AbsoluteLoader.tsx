@@ -1,5 +1,5 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import { style } from "./styles/styles";
+import { style } from "./styles/main";
 import { Stack } from "@mui/material";
 
 function AbsoluteLoader() {

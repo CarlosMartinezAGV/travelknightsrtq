@@ -12,14 +12,15 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import Accordion from "@mui/material/Accordion";
-import { Memory } from "../redux/types";
-import { style } from "./styles/styles";
+import { style } from "./styles/main";
 import { Stack } from "@mui/material";
+import { TMemory } from "../redux/slices/memories/types";
+
 type MemoryListItemProps = {
-  memory: Memory;
-  expanded: number | false;
+  memory: TMemory;
+  expanded: string | false;
   handleAccordionChange: (
-    panel: number
+    panel: string
   ) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
   handleLoading: (isLoadingFlag: boolean) => void;
   handleEditMemoryToggle: () => void;
@@ -46,7 +47,7 @@ function MemoryListItem({
     await removeMemory(memory);
 
     if (currentState.totalStateMemoryCount === 1) {
-      await removeState(memory.stateId);
+      await removeState(memory.state_id);
       dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }));
     }
     handleLoading(false);
@@ -78,10 +79,10 @@ function MemoryListItem({
           <Typography flex={1}>{memory.title}</Typography>
           <Typography flex={1}>{memory.city}</Typography>
           <Typography flex={1}>
-            {new Date(memory.startDate).toLocaleDateString("en-US")}
+            {new Date(memory.start_date).toLocaleDateString("en-US")}
           </Typography>
           <Typography flex={1}>
-            {new Date(memory.endDate).toLocaleDateString("en-US")}
+            {new Date(memory.end_date).toLocaleDateString("en-US")}
           </Typography>
         </Stack>
       </AccordionSummary>

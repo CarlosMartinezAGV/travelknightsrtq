@@ -1,4 +1,3 @@
-import { useFetchStatesQuery } from "../../redux/store";
 import RenderedSVGStates from "./RenderedSVGStates";
 import { setCurrentState } from "../../redux/store";
 import EditMemoryForm from "../EditMemoryForm";
@@ -19,16 +18,21 @@ import {
   useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import GetStates from "../../hooks/GetStates";
 
 function Map() {
-  const { data, isLoading } = useFetchStatesQuery();
+  const dispatch = useDispatch();
+  const { data, error, isFetching } = GetStates();
+
+  if (error) {
+    console.log(error);
+  }
+
   const [isShowDialog, setIsShowDialog] = useState(false);
   const [isShowEditMemory, setIsShowEditMemory] = useState(false);
 
-  const dispatch = useDispatch();
-
   const handleModalOpen = (
-    id: number | undefined,
+    id: string | undefined,
     currentStateAbbreviation: string,
     currentStateTitle: string
   ) => {
@@ -96,7 +100,7 @@ function Map() {
   return (
     <>
       {/* isLoading for fetching map */}
-      {isLoading ? (
+      {isFetching ? (
         <AbsoluteLoader />
       ) : (
         <>

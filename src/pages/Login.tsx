@@ -10,8 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import InvertColorsOutlinedIcon from "@mui/icons-material/InvertColorsOutlined";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useLoginMutation } from "../redux/slices/auth/authApiSlice";
+import { useForm, SubmitHandler, Controller, set } from "react-hook-form";
+// import { useLoginMutation } from "../redux/slices/auth/authApiSlice";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,15 +20,19 @@ import { useNavigate } from "react-router-dom";
 import { isErrorWithMessage, isFetchBaseQueryError } from "../redux/helpers";
 import LoadingProgressButton from "../components/LoadingProgressButton";
 import { TLoginCredentials, loginCredentialsSchema } from "../zodtypes";
-import { ERRORCOLOR } from "../components/styles/styles";
+import { ERRORCOLOR } from "../components/styles/main";
 import { handleNoWhiteSpace } from "../redux/utils";
 import { useState } from "react";
+import { supabase } from "../supabase/main";
+import { setCredentials } from "../redux/slices/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 function Login() {
-  const [login, { isLoading }] = useLoginMutation();
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [LoginError, setLoginErrorMessage] = useState<string>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { control, handleSubmit } = useForm<TLoginCredentials>({
     resolver: zodResolver(loginCredentialsSchema),
@@ -39,19 +43,26 @@ function Login() {
   });
 
   const onValid: SubmitHandler<TLoginCredentials> = async (data) => {
-    const loginData = data;
+    setIsLoading(true);
+
     try {
-      await login(loginData);
-      navigate("/map");
-    } catch (err) {
-      if (isErrorWithMessage(err)) {
-        setLoginErrorMessage(err.data?.error_description);
-      } else if (isFetchBaseQueryError(err)) {
-        const errMsg = "error" in err ? err.error : JSON.stringify(err.data);
-        setLoginErrorMessage(errMsg);
-      } else {
-        console.error(err);
+      const { data: loginResult, error: loginError } =
+        await supabase.auth.signInWithPassword({
+          email: data.email,
+          password: data.password,
+        });
+
+      if (loginError) {
+        setLoginErrorMessage(loginError.message);
+        return;
       }
+
+      dispatch(
+        setCredentials({ user: loginResult.user, session: loginResult.session })
+      );
+      navigate("/map");
+    } finally {
+      setIsLoading(false);
     }
   };
 

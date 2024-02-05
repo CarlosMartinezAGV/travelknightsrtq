@@ -4,18 +4,15 @@ import {
   BaseQueryFn,
 } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logout } from "../slices/auth/authSlice";
+import { SUPABASE_KEY, SUPABASE_URL } from "../../supabase/main";
 import { RootState } from "../store";
-import { NODE_ENV, SUPABASE_KEY } from "../../supabase/main";
 
-export let BASE_URL = "https://gauogophnffxrrcbrzpi.supabase.co";
-if (NODE_ENV === "production") {
-  BASE_URL = "https://tanknicians.xyz/";
-}
+// export const BASE_URL = "https://gauogophnffxrrcbrzpi.supabase.co";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: BASE_URL,
+  baseUrl: SUPABASE_URL,
   prepareHeaders: (headers, { getState }) => {
-    const access_token = (getState() as RootState).auth.access_token;
+    const access_token = (getState() as RootState).auth.session?.access_token;
 
     if (access_token) {
       headers.set("Authorization", `Bearer ${access_token}`);

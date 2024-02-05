@@ -1,19 +1,20 @@
-import { State } from "../../redux/slices/states/types";
+import { TState } from "../../redux/slices/states/types";
 import { states } from "./states";
 
 type RenderedSVGStatesProps = {
-  data: State[] | undefined;
+  data: TState[] | undefined;
   handleModalOpen: (
-    id: number | undefined,
+    id: string | undefined,
     abbreviation: string,
     title: string
   ) => void;
 };
 
 function RenderedSVGStates({ data, handleModalOpen }: RenderedSVGStatesProps) {
+  console.log(data);
   const renderedStates = states.map(
     ({ title, className, id: stateAbbreviation, ...props }) => {
-      let stateId: number | undefined = undefined;
+      let stateId: string | undefined = undefined;
 
       // Check if state is in state and add visited class
       const isVisited = data?.some(({ abbreviation, id }) => {

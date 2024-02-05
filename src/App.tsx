@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RequireAuth from "./redux/slices/auth/RequireAuth";
 import { ThemeProvider } from "@mui/material/styles";
-import { theme } from "./components/styles/styles";
+import { theme } from "./components/styles/main";
 
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";

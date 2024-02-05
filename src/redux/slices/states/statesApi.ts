@@ -1,6 +1,8 @@
 // '@reduxjs/toolkit/query/react' creates the custom hooks
 // '@reduxjs/toolkit/query' does not create the custom hooks
-import { USER } from "../../utils";
+// import { USER } from "../../utils";
+import { User } from "@supabase/supabase-js";
+import { supabase } from "../../../supabase/main";
 import { apiSlice } from "../../api/apiSlice";
 import { TState } from "./types";
 
@@ -18,14 +20,14 @@ export const statesApi = apiSlice.injectEndpoints({
             method: "POST",
             body: {
               //   userId: user.id,
-              userId: USER.id,
+              userId: 1,
               name: state.name,
               abbreviation: state.abbreviation,
             },
           };
         },
       }),
-      fetchStates: builder.query<TState[], void>({
+      fetchStates: builder.query<TState[], User | null>({
         // Provide the data hook builder with a providedTags option
         // to specify which tags should be provided to the data hook
         // when the query is fulfilled
@@ -40,11 +42,17 @@ export const statesApi = apiSlice.injectEndpoints({
               ]
             : [{ type: "States", id: "LIST" }];
         },
-        query: () => {
-          return {
-            url: "/rest/v1/states?select=*",
-            method: "GET",
-          };
+        queryFn: async (user) => {
+          const { data, error } = await supabase
+            .from("states")
+            .select("*")
+            .eq("user_id", user?.id);
+
+          if (error) {
+            throw { error };
+          }
+          console.log("fetchStates: ", data);
+          return { data };
         },
       }),
       fetchState: builder.query({
@@ -52,7 +60,7 @@ export const statesApi = apiSlice.injectEndpoints({
           return {
             url: "/states",
             params: {
-              userId: USER.id,
+              userId: 1,
               id: id,
             },
             method: "GET",
