@@ -15,29 +15,23 @@ import { useSelector } from "react-redux";
 import { isBefore } from "date-fns";
 import dayjs from "dayjs";
 import { Stack } from "@mui/material";
+import { TMemoryValidation } from "../redux/slices/memories/types";
 
 type MemoryFormProps = {
   handleBackClick: () => void;
 };
 
-type MemoryFormValues = {
-  title: string;
-  city: string;
-  startDate: Date | null;
-  endDate: Date;
-  description: string;
-};
 function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
   const currentState = useSelector(selectCurrentState);
   const currentMemory = useSelector(selectCurrentMemory);
   const [updateMemory] = useUpdateMemoryMutation();
 
-  const editMemoryForm = useForm<MemoryFormValues>({
+  const editMemoryForm = useForm<TMemoryValidation>({
     defaultValues: {
       title: currentMemory.title,
       city: currentMemory.city,
-      startDate: dayjs(currentMemory.start_date).toDate(),
-      endDate: dayjs(currentMemory.end_date).toDate(),
+      start_date: dayjs(currentMemory.start_date).toDate(),
+      end_date: dayjs(currentMemory.end_date).toDate(),
       description: currentMemory.description,
     },
   });
@@ -46,11 +40,12 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
     editMemoryForm;
   const { errors } = formState;
 
-  const onSubmit: SubmitHandler<MemoryFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<TMemoryValidation> = async (formdata) => {
     await updateMemory({
-      id: currentMemory.id,
-      stateId: currentMemory.state_id,
-      ...data,
+      ...currentMemory,
+      ...formdata,
+      start_date: dayjs(formdata.start_date).format(),
+      end_date: dayjs(formdata.end_date).format(),
     });
 
     handleBackClick();
@@ -91,13 +86,13 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
           <Grid item xs={12} sm={4}>
             <Box display="flex" justifyContent="flex-end">
               <Controller
-                name="startDate"
+                name="start_date"
                 control={control}
                 rules={{
                   required: "required*",
                   validate: {
                     endDateAfterStartDate: (startDateValue) => {
-                      const endDateValue = getValues("endDate");
+                      const endDateValue = getValues("end_date");
                       if (startDateValue && endDateValue) {
                         return (
                           isBefore(startDateValue, endDateValue) ||
@@ -115,10 +110,10 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
                       label="Start Date"
                       slotProps={{
                         textField: {
-                          error: !!errors?.startDate,
+                          error: !!errors?.start_date,
                           helperText:
-                            errors.startDate && errors.startDate?.message,
-                          required: !!errors?.startDate,
+                            errors.start_date && errors.start_date?.message,
+                          required: !!errors?.start_date,
                         },
                       }}
                     />
@@ -130,7 +125,7 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
           <Grid item xs={12} sm={4}>
             <Box display="flex" justifyContent="flex-end">
               <Controller
-                name="endDate"
+                name="end_date"
                 control={control}
                 rules={{ required: "required" }}
                 render={({ field }) => (
@@ -140,8 +135,9 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
                       label="End Date"
                       slotProps={{
                         textField: {
-                          error: !!errors?.endDate,
-                          helperText: errors.endDate && errors.endDate?.message,
+                          error: !!errors?.end_date,
+                          helperText:
+                            errors.end_date && errors.end_date?.message,
                           // sx: {
                         },
                       }}

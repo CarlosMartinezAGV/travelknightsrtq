@@ -3,10 +3,10 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   selectCurrentState,
-  setTotalStateMemoryCount,
   useRemoveMemoryMutation,
   useRemoveStateMutation,
   setMemoryToEdit,
+  setResetCount,
 } from "../redux/store";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -36,7 +36,6 @@ function MemoryListItem({
   const currentState = useSelector(selectCurrentState);
   const [removeMemory] = useRemoveMemoryMutation();
   const [removeState] = useRemoveStateMutation();
-
   const dispatch = useDispatch();
 
   // Async function to remove memory
@@ -48,13 +47,13 @@ function MemoryListItem({
 
     if (currentState.memoryCount === 1) {
       await removeState(memory.state_id);
-      dispatch(setTotalStateMemoryCount({ memoryCount: 0 }));
+      dispatch(setResetCount());
     }
     handleLoading(false);
   };
 
   const handleEditMemory = () => {
-    dispatch(setMemoryToEdit({ ...memory }));
+    dispatch(setMemoryToEdit(memory));
     handleEditMemoryToggle();
   };
 

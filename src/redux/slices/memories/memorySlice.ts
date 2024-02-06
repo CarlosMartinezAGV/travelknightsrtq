@@ -16,13 +16,17 @@ const memorySlice = createSlice({
   initialState,
   reducers: {
     setMemoryToEdit: (state, action) => {
-      state.id = action.payload.id;
-      state.title = action.payload.title;
-      state.city = action.payload.city;
-      state.description = action.payload.description;
-      state.start_date = action.payload.startDate;
-      state.end_date = action.payload.endDate;
-      state.state_id = action.payload.stateId;
+      const { id, title, city, description, start_date, end_date, state_id } =
+        action.payload;
+      Object.assign(state, {
+        id,
+        title,
+        city,
+        description,
+        start_date,
+        end_date,
+        state_id,
+      });
     },
   },
 });

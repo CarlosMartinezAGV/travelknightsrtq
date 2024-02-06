@@ -18,7 +18,7 @@ import {
   useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import GetStates from "../../hooks/GetStates";
+import GetStates from "../../redux/hooks/GetStates";
 
 function Map() {
   const dispatch = useDispatch();

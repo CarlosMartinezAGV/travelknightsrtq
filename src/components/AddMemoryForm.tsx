@@ -50,16 +50,12 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
 
   const onSubmit: SubmitHandler<TMemoryValidation> = async (formdata) => {
     // If there are no memories in the state, add the state first
-    console.log("AddMemoryForm currentState: ", currentState);
-
     if (currentState.memoryCount === 0) {
       const response = await addState({
         name: currentState.name,
         abbreviation: currentState.abbreviation,
         user_id: currentUser?.id as string,
       }).unwrap();
-
-      console.log("AddMemoryForm state data: ", response);
 
       dispatch(setCurrentStateWithId({ id: response.id }));
 
@@ -128,7 +124,6 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
                   validate: {
                     endDateAfterStartDate: (startDateValue) => {
                       const endDateValue = getValues("end_date");
-
                       if (startDateValue && endDateValue) {
                         return (
                           isBefore(startDateValue, endDateValue) ||

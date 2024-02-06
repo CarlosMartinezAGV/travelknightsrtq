@@ -1,7 +1,4 @@
-import {
-  setCurrentStateWithId,
-  setTotalStateMemoryCount,
-} from "../redux/store";
+import { setCurrentStateWithId, setMemoryCount } from "../redux/store";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -12,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddMemoryForm from "./AddMemoryForm";
 import { Stack } from "@mui/material";
 import { TMemory } from "../redux/slices/memories/types";
-import GetMemories from "../hooks/GetMemories";
+import GetMemories from "../redux/hooks/GetMemories";
 
 type MemoryListProps = {
   handleEditMemoryToggle: () => void;
@@ -45,7 +42,7 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
       );
     }
 
-    dispatch(setTotalStateMemoryCount({ memoryCount }));
+    dispatch(setMemoryCount({ memoryCount }));
   }, [dispatch, memoriesData]);
 
   const handleAddMemory = () => {

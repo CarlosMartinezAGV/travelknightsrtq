@@ -6,7 +6,6 @@ export const statesApi = apiSlice.injectEndpoints({
   endpoints(builder) {
     return {
       addState: builder.mutation<TState, TStateInsert>({
-        invalidatesTags: ["States"],
         queryFn: async (state) => {
           const { data, error } = await supabase
             .from("states")
@@ -18,9 +17,9 @@ export const statesApi = apiSlice.injectEndpoints({
           }
           return { data: data[0] };
         },
+        invalidatesTags: ["States"],
       }),
       fetchStates: builder.query<TState[], TState["user_id"]>({
-        providesTags: ["States"],
         queryFn: async (user_id) => {
           if (!user_id) {
             throw new Error("fetchStates error: no user_id provided");
@@ -37,15 +36,25 @@ export const statesApi = apiSlice.injectEndpoints({
 
           return { data };
         },
+        providesTags: ["States"],
       }),
-      removeState: builder.mutation({
-        invalidatesTags: ["States"],
-        query: (stateId) => {
-          // return {
-          //   url: `/states/${stateId}`,
-          //   method: "DELETE",
-          // };
+      removeState: builder.mutation<null, TState["id"]>({
+        queryFn: async (state_id) => {
+          if (!state_id) {
+            throw new Error("removeState error: no state_id provided");
+          }
+          const { error } = await supabase
+            .from("states")
+            .delete()
+            .eq("id", state_id);
+
+          if (error) {
+            throw new Error(`removeState error: ${error.message}`);
+          }
+
+          return { data: null };
         },
+        invalidatesTags: ["States"],
       }),
     };
   },

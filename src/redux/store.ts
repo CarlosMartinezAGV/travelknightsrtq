@@ -3,7 +3,8 @@ import {
   stateReducer,
   setCurrentState,
   setCurrentStateWithId,
-  setTotalStateMemoryCount,
+  setMemoryCount,
+  setResetCount,
 } from "./slices/states/stateSlice";
 import { memoryReducer, setMemoryToEdit } from "./slices/memories/memorySlice";
 import {
@@ -55,7 +56,8 @@ export type RootState = ReturnType<typeof store.getState>;
 export {
   setCurrentState,
   setCurrentStateWithId,
-  setTotalStateMemoryCount,
+  setMemoryCount,
+  setResetCount,
   setMemoryToEdit,
 };
 export {

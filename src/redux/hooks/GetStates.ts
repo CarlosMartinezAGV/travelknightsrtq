@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import { useFetchStatesQuery } from "../redux/store";
-import { selectCurrentUser } from "../redux/slices/auth/authSlice";
+import { useFetchStatesQuery } from "../store";
+import { selectCurrentUser } from "../slices/auth/authSlice";
 
 function GetStates() {
   const user = useSelector(selectCurrentUser);

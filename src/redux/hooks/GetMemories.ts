@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { selectCurrentState, useFetchMemoriesQuery } from "../redux/store";
+import { selectCurrentState, useFetchMemoriesQuery } from "../store";
 
 function GetMemories() {
   const currentState = useSelector(selectCurrentState);

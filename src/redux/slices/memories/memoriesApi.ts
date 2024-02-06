@@ -6,9 +6,6 @@ export const memoriesApi = apiSlice.injectEndpoints({
   endpoints(builder) {
     return {
       addMemory: builder.mutation<TMemory, TMemoryInsert>({
-        invalidatesTags: (memory) => [
-          { type: "Memories", id: memory?.state_id },
-        ],
         queryFn: async (memory) => {
           if (!memory) {
             throw new Error("addMemory error: no memory provided");
@@ -24,18 +21,11 @@ export const memoriesApi = apiSlice.injectEndpoints({
           }
           return { data: data[0] };
         },
+        invalidatesTags: (_result, _error, memory) => [
+          { type: "Memories", state_id: memory.state_id },
+        ],
       }),
       fetchMemories: builder.query<TMemory[] | null, TMemory["state_id"]>({
-        providesTags: (result) => {
-          return result
-            ? [
-                ...result.map((memory: TMemory) => ({
-                  type: "Memories" as const,
-                  id: memory.state_id,
-                })),
-              ]
-            : [{ type: "Memories", id: "LIST" }];
-        },
         queryFn: async (state_id) => {
           // If no state_id is provided, return an empty array of memories to avoid
           // fetching memories for a state that doesn't exist
@@ -53,33 +43,58 @@ export const memoriesApi = apiSlice.injectEndpoints({
           }
           return { data };
         },
-      }),
-      updateMemory: builder.mutation({
-        invalidatesTags: (memory) => [{ type: "Memories", id: memory.id }],
-        query: (memory) => {
-          // return {
-          //   url: `/memories/${memory.id}`,
-          //   method: "PUT",
-          //   body: {
-          //     title: memory.title,
-          //     city: memory.city,
-          //     startDate: memory.startDate,
-          //     endDate: memory.endDate,
-          //     description: memory.description,
-          //     userId: USER.id,
-          //     stateId: memory.stateId,
-          //   },
-          // };
+        providesTags: (result) => {
+          return result
+            ? [
+                ...result.map((memory: TMemory) => ({
+                  type: "Memories" as const,
+                  id: memory.id,
+                  state_id: memory.state_id,
+                })),
+              ]
+            : [{ type: "Memories", id: "LIST" }];
         },
       }),
-      removeMemory: builder.mutation({
-        invalidatesTags: (memory) => [{ type: "Memories", id: memory.id }],
-        query: (memory) => {
-          // return {
-          //   url: `/memories/${memory.id}`,
-          //   method: "DELETE",
-          // };
+      updateMemory: builder.mutation<TMemory, TMemory>({
+        queryFn: async (memory) => {
+          if (!memory) {
+            throw new Error("updateMemory error: no memory provided");
+          }
+          const { data, error } = await supabase
+            .from("memories")
+            .update({ ...memory })
+            .eq("id", memory.id)
+            .select();
+
+          if (error) {
+            throw new Error(`updateMemory error: ${error.message}`);
+          }
+          return { data: data[0] };
         },
+        invalidatesTags: (_result, _error, memory) => [
+          { type: "Memories", id: memory.id, state_id: memory.state_id },
+        ],
+      }),
+      removeMemory: builder.mutation<null, TMemory>({
+        queryFn: async (memory) => {
+          if (!memory) {
+            throw new Error("removeMemory error: no memory provided");
+          }
+
+          const { error } = await supabase
+            .from("memories")
+            .delete()
+            .eq("id", memory.id);
+
+          if (error) {
+            throw new Error(`removeMemory error: ${error.message}`);
+          }
+
+          return { data: null };
+        },
+        invalidatesTags: (_result, _error, memory) => [
+          { type: "Memories", id: memory.id, state_id: memory.state_id },
+        ],
       }),
     };
   },

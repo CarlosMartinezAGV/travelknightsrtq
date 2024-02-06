@@ -21,8 +21,11 @@ const stateSlice = createSlice({
     setCurrentStateWithId: (state, action) => {
       state.id = action.payload.id;
     },
-    setTotalStateMemoryCount: (state, action) => {
+    setMemoryCount: (state, action) => {
       state.memoryCount = action.payload.memoryCount;
+    },
+    setResetCount: (state) => {
+      state.memoryCount = 0;
     },
   },
   // extraReducers: for addState setCurrentStateWithId
@@ -31,6 +34,7 @@ const stateSlice = createSlice({
 export const {
   setCurrentState,
   setCurrentStateWithId,
-  setTotalStateMemoryCount,
+  setMemoryCount,
+  setResetCount,
 } = stateSlice.actions;
 export const stateReducer = stateSlice.reducer;
