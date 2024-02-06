@@ -1,32 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
+import { TMemory } from "./types";
 
-const initialState = {
-  id: -1,
+const initialState: TMemory = {
+  id: "",
   title: "",
   city: "",
   description: "",
-  startDate: "",
-  endDate: "",
-  userId: -1,
-  stateId: -1,
-}
+  start_date: "",
+  end_date: "",
+  state_id: "",
+};
 
 const memorySlice = createSlice({
   name: "memory",
   initialState,
   reducers: {
     setMemoryToEdit: (state, action) => {
-      state.id = action.payload.id
-      state.title = action.payload.title
-      state.city = action.payload.city
-      state.description = action.payload.description
-      state.startDate = action.payload.startDate
-      state.endDate = action.payload.endDate
-      state.userId = action.payload.userId
-      state.stateId = action.payload.stateId
+      state.id = action.payload.id;
+      state.title = action.payload.title;
+      state.city = action.payload.city;
+      state.description = action.payload.description;
+      state.start_date = action.payload.startDate;
+      state.end_date = action.payload.endDate;
+      state.state_id = action.payload.stateId;
     },
   },
-})
+});
 
-export const { setMemoryToEdit } = memorySlice.actions
-export const memoryReducer = memorySlice.reducer
+export const { setMemoryToEdit } = memorySlice.actions;
+export const memoryReducer = memorySlice.reducer;

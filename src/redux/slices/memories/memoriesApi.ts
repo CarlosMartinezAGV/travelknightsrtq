@@ -1,58 +1,56 @@
 import { USER } from "../../utils";
 import { apiSlice } from "../../api/apiSlice";
-import { TMemory } from "./types";
+import { TMemory, TMemoryInsert } from "./types";
+import { supabase } from "../../../supabase/main";
 
 export const memoriesApi = apiSlice.injectEndpoints({
   endpoints(builder) {
     return {
-      addMemory: builder.mutation({
+      addMemory: builder.mutation<void, TMemoryInsert>({
         // Provide the data hook builder with an invalidatesTags option
         // to specify which tags should be invalidated when the mutation
         // is fulfilled successfully
         invalidatesTags: () => [{ type: "Memory", id: "LIST" }],
-        query: (memory) => {
-          return {
-            url: "/memories",
-            method: "POST",
-            body: {
-              // With accounts, we can use the id from the account object
-              // userId: user.id,
-              title: memory.title,
-              city: memory.city,
-              startDate: memory.startDate,
-              endDate: memory.endDate,
-              description: memory.description,
-              userId: USER.id,
-              stateId: memory.stateId,
-            },
-          };
+        query: async (memory) => {
+          const { data, error } = await supabase
+            .from("memories")
+            .insert([{ ...memory }])
+            .select();
+
+          if (error) {
+            console.log("fetchMemories error: ", error);
+            // throw { error };
+          }
+          return { data };
         },
       }),
-      fetchMemories: builder.query({
+      fetchMemories: builder.query<TMemory[], string>({
         // Provide the data hook builder with a providedTags option
         // to specify which tags should be provided to the data hook
         // when the query is fulfilled
-        providesTags: (result, _error, state) => {
+        providesTags: (result) => {
           return result
             ? [
                 ...result.map((memory: TMemory) => ({
                   type: "Memory" as const,
                   id: memory.id,
-                  stateAbbreviationId: state.currentStateAbbreviation,
                 })),
                 { type: "Memory", id: "LIST" },
               ]
             : [{ type: "Memory", id: "LIST" }];
         },
-        query: (state) => {
-          return {
-            url: "/rest/v1/memories?select=*",
-            params: {
-              userId: USER.id,
-              stateId: state.id,
-            },
-            method: "GET",
-          };
+        queryFn: async (state_id) => {
+          const { data, error } = await supabase
+            .from("memories")
+            .select("*")
+            .eq("state_id", state_id);
+
+          console.log("fetchMemories: ", data);
+          if (error) {
+            console.log("fetchMemories error: ", error);
+            throw { error };
+          }
+          return { data };
         },
       }),
       updateMemory: builder.mutation({

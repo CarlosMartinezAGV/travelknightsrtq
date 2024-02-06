@@ -1,6 +1,5 @@
 // '@reduxjs/toolkit/query/react' creates the custom hooks
 // '@reduxjs/toolkit/query' does not create the custom hooks
-// import { USER } from "../../utils";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "../../../supabase/main";
 import { apiSlice } from "../../api/apiSlice";
@@ -49,9 +48,10 @@ export const statesApi = apiSlice.injectEndpoints({
             .eq("user_id", user?.id);
 
           if (error) {
+            console.error("fetchStates: ", error);
             throw { error };
           }
-          console.log("fetchStates: ", data);
+
           return { data };
         },
       }),

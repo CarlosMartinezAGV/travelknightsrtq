@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CurrentState } from "../../types";
+import { TState } from "./types";
+
+export type CurrentState = TState & { memoryCount: number };
 
 const initialState: CurrentState = {
-  id: -1,
-  currentStateAbbreviation: "",
-  currentStateTitle: "",
-  totalStateMemoryCount: -1,
+  id: "",
+  abbreviation: "",
+  name: "",
+  user_id: "",
+  memoryCount: 0,
 };
 
 const stateSlice = createSlice({
@@ -13,15 +16,15 @@ const stateSlice = createSlice({
   initialState,
   reducers: {
     setCurrentState: (state, action) => {
-      state.id = action.payload.id || -1;
-      state.currentStateAbbreviation = action.payload.currentStateAbbreviation;
-      state.currentStateTitle = action.payload.currentStateTitle;
+      state.id = action.payload.id;
+      state.abbreviation = action.payload.abbreviation;
+      state.name = action.payload.name;
     },
     setCurrentStateWithId: (state, action) => {
       state.id = action.payload.id;
     },
     setTotalStateMemoryCount: (state, action) => {
-      state.totalStateMemoryCount = action.payload.totalStateMemoryCount;
+      state.memoryCount = action.payload.totalStateMemoryCount;
     },
   },
 });

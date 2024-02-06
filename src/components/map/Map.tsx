@@ -22,10 +22,10 @@ import GetStates from "../../hooks/GetStates";
 
 function Map() {
   const dispatch = useDispatch();
-  const { data, error, isFetching } = GetStates();
+  const { data, error, isLoading } = GetStates();
 
   if (error) {
-    console.log(error);
+    console.log(`Map.tsx error: ${error}`);
   }
 
   const [isShowDialog, setIsShowDialog] = useState(false);
@@ -33,15 +33,15 @@ function Map() {
 
   const handleModalOpen = (
     id: string | undefined,
-    currentStateAbbreviation: string,
-    currentStateTitle: string
+    abbreviation: string,
+    name: string
   ) => {
     setIsShowDialog(true);
     dispatch(
       setCurrentState({
         id,
-        currentStateAbbreviation,
-        currentStateTitle,
+        abbreviation,
+        name,
       })
     );
   };
@@ -100,7 +100,7 @@ function Map() {
   return (
     <>
       {/* isLoading for fetching map */}
-      {isFetching ? (
+      {isLoading ? (
         <AbsoluteLoader />
       ) : (
         <>

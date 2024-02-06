@@ -7,8 +7,6 @@ import { setCredentials, logout } from "../slices/auth/authSlice";
 import { SUPABASE_KEY, SUPABASE_URL } from "../../supabase/main";
 import { RootState } from "../store";
 
-// export const BASE_URL = "https://gauogophnffxrrcbrzpi.supabase.co";
-
 const baseQuery = fetchBaseQuery({
   baseUrl: SUPABASE_URL,
   prepareHeaders: (headers, { getState }) => {

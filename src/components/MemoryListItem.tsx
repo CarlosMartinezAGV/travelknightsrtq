@@ -46,7 +46,7 @@ function MemoryListItem({
     // Remove memory first, then state when it's the last memory in the state
     await removeMemory(memory);
 
-    if (currentState.totalStateMemoryCount === 1) {
+    if (currentState.memoryCount === 1) {
       await removeState(memory.state_id);
       dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }));
     }

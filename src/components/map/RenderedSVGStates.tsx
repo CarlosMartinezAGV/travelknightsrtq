@@ -11,7 +11,6 @@ type RenderedSVGStatesProps = {
 };
 
 function RenderedSVGStates({ data, handleModalOpen }: RenderedSVGStatesProps) {
-  console.log(data);
   const renderedStates = states.map(
     ({ title, className, id: stateAbbreviation, ...props }) => {
       let stateId: string | undefined = undefined;
@@ -25,7 +24,7 @@ function RenderedSVGStates({ data, handleModalOpen }: RenderedSVGStatesProps) {
       });
 
       // Add visited class if state is in state
-      const stateVisitedClass = isVisited ? className + " visited" : className;
+      const stateVisitedClass = isVisited ? `${className} visited` : className;
       return (
         <path
           key={stateAbbreviation}

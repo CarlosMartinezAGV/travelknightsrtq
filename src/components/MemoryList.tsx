@@ -1,18 +1,15 @@
-import {
-  useFetchMemoriesQuery,
-  setTotalStateMemoryCount,
-  setCurrentStateWithId,
-} from "../redux/store";
+import { setTotalStateMemoryCount } from "../redux/store";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentState } from "../redux/store";
+import { useDispatch } from "react-redux";
 import MemoryListItem from "./MemoryListItem";
 import { useCallback, useEffect, useState } from "react";
 import AddMemoryForm from "./AddMemoryForm";
 import { Stack } from "@mui/material";
+import { TMemory } from "../redux/slices/memories/types";
+import GetMemories from "../hooks/GetMemories";
 
 type MemoryListProps = {
   handleEditMemoryToggle: () => void;
@@ -20,40 +17,40 @@ type MemoryListProps = {
 
 function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
   const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false);
-  const [expanded, setExpanded] = useState<number | false>(false);
-  const currentState = useSelector(selectCurrentState);
+  const [expanded, setExpanded] = useState<string | false>(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
-  // fix memoize when state changes
   const {
-    data: memoriesDataFromQuery,
+    data: memoriesData,
     error: memoriesError,
-    isFetching: isFetchingMemories,
-  } = useFetchMemoriesQuery(currentState);
+    isLoading: isLoadingMemories,
+    currentState,
+  } = GetMemories();
 
   // Set total state memory count
   // Set current state from first memory stateId
   useEffect(() => {
-    if (memoriesDataFromQuery && memoriesDataFromQuery.length > 0) {
-      dispatch(setCurrentStateWithId({ id: memoriesDataFromQuery[0].stateId }));
+    if (memoriesData && memoriesData.length > 0) {
+      // dispatch(setCurrentStateWithId({ id: memoriesData[0].stateId }));
       dispatch(
         setTotalStateMemoryCount({
-          totalStateMemoryCount: memoriesDataFromQuery.length,
+          totalStateMemoryCount: memoriesData.length,
         })
       );
     } else {
       dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }));
     }
-  }, [dispatch, memoriesDataFromQuery]);
+  }, [dispatch, memoriesData]);
 
   const handleAddMemory = () => {
     setIsAddMemoryModalOpen(!isAddMemoryModalOpen);
     setExpanded(false);
   };
 
+  // Review if useCallback is necessary
   const handleAccordionChange = useCallback(
-    (panel: number) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+    (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded((prevExpanded) =>
         isExpanded ? panel : prevExpanded === panel ? false : prevExpanded
       );
@@ -66,16 +63,20 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
   };
 
   let content = null;
-  if (isLoading || isFetchingMemories) {
+  if (isLoading || isLoadingMemories) {
     content = (
       <Stack justifyContent="center" alignItems="center" my={1}>
         <CircularProgress />
       </Stack>
     );
-  } else if (memoriesError) {
+  }
+  // Supabase error handling
+  // Error can be an object or a string that is empty or not
+  else if (memoriesError && Object.keys(memoriesError).length > 0) {
     content = (
       <Stack justifyContent="center" alignItems="center">
-        Error Loading Memories...
+        <Typography>Error Loading Memories...</Typography>
+        <Typography>{JSON.stringify(memoriesError)}</Typography>
       </Stack>
     );
   } else if (isAddMemoryModalOpen) {
@@ -84,7 +85,7 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
     content =
       // Check if there are memories
       // If there are no memories, display empty list message
-      memoriesDataFromQuery?.length === 0 ? (
+      !memoriesData || memoriesData?.length === 0 ? (
         <Stack
           justifyContent="center"
           alignItems="center"
@@ -117,7 +118,7 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
               End Date
             </Typography>
           </Stack>
-          {memoriesDataFromQuery?.map((memory) => {
+          {memoriesData?.map((memory: TMemory) => {
             return (
               <MemoryListItem
                 expanded={expanded}
@@ -137,7 +138,7 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
     <>
       <Box flex={1}>
         <Typography mb={2.5} variant="h5">
-          Your Memories From {currentState.currentStateTitle}
+          Your Memories From {currentState}
         </Typography>
       </Box>
       <Box flex={1} ml="auto" pr={0.5}>
