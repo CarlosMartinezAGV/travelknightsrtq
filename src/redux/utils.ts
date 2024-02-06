@@ -13,3 +13,6 @@ export const handleNoWhiteSpace = (
     e.preventDefault();
   }
 };
+
+// Used to overwrite types
+export type Overwrite<T, U> = Omit<T, keyof U> & U;

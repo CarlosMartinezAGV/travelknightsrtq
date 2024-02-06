@@ -1,4 +1,7 @@
-import { setTotalStateMemoryCount } from "../redux/store";
+import {
+  setCurrentStateWithId,
+  setTotalStateMemoryCount,
+} from "../redux/store";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -31,16 +34,18 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
   // Set total state memory count
   // Set current state from first memory stateId
   useEffect(() => {
-    if (memoriesData && memoriesData.length > 0) {
-      // dispatch(setCurrentStateWithId({ id: memoriesData[0].stateId }));
+    const hasMemoriesData = memoriesData && memoriesData.length > 0;
+    const memoryCount = hasMemoriesData ? memoriesData.length : 0;
+
+    if (hasMemoriesData) {
       dispatch(
-        setTotalStateMemoryCount({
-          totalStateMemoryCount: memoriesData.length,
+        setCurrentStateWithId({
+          id: memoriesData[0].state_id,
         })
       );
-    } else {
-      dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }));
     }
+
+    dispatch(setTotalStateMemoryCount({ memoryCount }));
   }, [dispatch, memoriesData]);
 
   const handleAddMemory = () => {
@@ -76,7 +81,6 @@ function MemoryList({ handleEditMemoryToggle }: MemoryListProps) {
     content = (
       <Stack justifyContent="center" alignItems="center">
         <Typography>Error Loading Memories...</Typography>
-        <Typography>{JSON.stringify(memoriesError)}</Typography>
       </Stack>
     );
   } else if (isAddMemoryModalOpen) {

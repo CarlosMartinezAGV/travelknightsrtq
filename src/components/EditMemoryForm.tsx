@@ -36,8 +36,8 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
     defaultValues: {
       title: currentMemory.title,
       city: currentMemory.city,
-      startDate: dayjs(currentMemory.startDate).toDate(),
-      endDate: dayjs(currentMemory.endDate).toDate(),
+      startDate: dayjs(currentMemory.start_date).toDate(),
+      endDate: dayjs(currentMemory.end_date).toDate(),
       description: currentMemory.description,
     },
   });
@@ -49,8 +49,7 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
   const onSubmit: SubmitHandler<MemoryFormValues> = async (data) => {
     await updateMemory({
       id: currentMemory.id,
-      userId: currentMemory.userId,
-      stateId: currentMemory.stateId,
+      stateId: currentMemory.state_id,
       ...data,
     });
 
@@ -60,7 +59,7 @@ function EditMemoryForm({ handleBackClick }: MemoryFormProps) {
   return (
     <Stack alignItems="center">
       <Typography component="h1" variant="h5" sx={{ mb: 4 }}>
-        {`Edit Memory for ${currentState.currentStateTitle}`}
+        {`Edit Memory for ${currentState.name}`}
       </Typography>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>

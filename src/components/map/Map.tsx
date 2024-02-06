@@ -24,6 +24,7 @@ function Map() {
   const dispatch = useDispatch();
   const { data, error, isLoading } = GetStates();
 
+  // TODO: Error handling component
   if (error) {
     console.log(`Map.tsx error: ${error}`);
   }
@@ -32,14 +33,14 @@ function Map() {
   const [isShowEditMemory, setIsShowEditMemory] = useState(false);
 
   const handleModalOpen = (
-    id: string | undefined,
+    state_id: string | null,
     abbreviation: string,
     name: string
   ) => {
     setIsShowDialog(true);
     dispatch(
       setCurrentState({
-        id,
+        id: state_id,
         abbreviation,
         name,
       })

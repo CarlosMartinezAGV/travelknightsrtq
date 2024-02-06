@@ -48,7 +48,7 @@ function MemoryListItem({
 
     if (currentState.memoryCount === 1) {
       await removeState(memory.state_id);
-      dispatch(setTotalStateMemoryCount({ totalStateMemoryCount: 0 }));
+      dispatch(setTotalStateMemoryCount({ memoryCount: 0 }));
     }
     handleLoading(false);
   };

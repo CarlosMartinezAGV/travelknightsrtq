@@ -1,4 +1,3 @@
-import { USER } from "../../utils";
 import { apiSlice } from "../../api/apiSlice";
 import { TMemory, TMemoryInsert } from "./types";
 import { supabase } from "../../../supabase/main";
@@ -6,78 +5,80 @@ import { supabase } from "../../../supabase/main";
 export const memoriesApi = apiSlice.injectEndpoints({
   endpoints(builder) {
     return {
-      addMemory: builder.mutation<void, TMemoryInsert>({
-        // Provide the data hook builder with an invalidatesTags option
-        // to specify which tags should be invalidated when the mutation
-        // is fulfilled successfully
-        invalidatesTags: () => [{ type: "Memory", id: "LIST" }],
-        query: async (memory) => {
+      addMemory: builder.mutation<TMemory, TMemoryInsert>({
+        invalidatesTags: (memory) => [
+          { type: "Memories", id: memory?.state_id },
+        ],
+        queryFn: async (memory) => {
+          if (!memory) {
+            throw new Error("addMemory error: no memory provided");
+          }
+
           const { data, error } = await supabase
             .from("memories")
             .insert([{ ...memory }])
             .select();
 
           if (error) {
-            console.log("fetchMemories error: ", error);
-            // throw { error };
+            throw new Error(`addMemory error: ${error.message}`);
           }
-          return { data };
+          return { data: data[0] };
         },
       }),
-      fetchMemories: builder.query<TMemory[], string>({
-        // Provide the data hook builder with a providedTags option
-        // to specify which tags should be provided to the data hook
-        // when the query is fulfilled
+      fetchMemories: builder.query<TMemory[] | null, TMemory["state_id"]>({
         providesTags: (result) => {
           return result
             ? [
                 ...result.map((memory: TMemory) => ({
-                  type: "Memory" as const,
-                  id: memory.id,
+                  type: "Memories" as const,
+                  id: memory.state_id,
                 })),
-                { type: "Memory", id: "LIST" },
               ]
-            : [{ type: "Memory", id: "LIST" }];
+            : [{ type: "Memories", id: "LIST" }];
         },
         queryFn: async (state_id) => {
+          // If no state_id is provided, return an empty array of memories to avoid
+          // fetching memories for a state that doesn't exist
+          if (!state_id) {
+            return { data: null };
+          }
+
           const { data, error } = await supabase
             .from("memories")
             .select("*")
             .eq("state_id", state_id);
 
-          console.log("fetchMemories: ", data);
           if (error) {
-            console.log("fetchMemories error: ", error);
-            throw { error };
+            throw { message: `fetchMemories error: ${error.message}` };
           }
           return { data };
         },
       }),
       updateMemory: builder.mutation({
-        invalidatesTags: (memory) => [{ type: "Memory", id: memory.id }],
+        invalidatesTags: (memory) => [{ type: "Memories", id: memory.id }],
         query: (memory) => {
-          return {
-            url: `/memories/${memory.id}`,
-            method: "PUT",
-            body: {
-              title: memory.title,
-              city: memory.city,
-              startDate: memory.startDate,
-              endDate: memory.endDate,
-              description: memory.description,
-              userId: USER.id,
-              stateId: memory.stateId,
-            },
-          };
+          // return {
+          //   url: `/memories/${memory.id}`,
+          //   method: "PUT",
+          //   body: {
+          //     title: memory.title,
+          //     city: memory.city,
+          //     startDate: memory.startDate,
+          //     endDate: memory.endDate,
+          //     description: memory.description,
+          //     userId: USER.id,
+          //     stateId: memory.stateId,
+          //   },
+          // };
         },
       }),
       removeMemory: builder.mutation({
-        invalidatesTags: (memory) => [{ type: "Memory", id: memory.id }],
+        invalidatesTags: (memory) => [{ type: "Memories", id: memory.id }],
         query: (memory) => {
-          return {
-            url: `/memories/${memory.id}`,
-            method: "DELETE",
-          };
+          // return {
+          //   url: `/memories/${memory.id}`,
+          //   method: "DELETE",
+          // };
         },
       }),
     };

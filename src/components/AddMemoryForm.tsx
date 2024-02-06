@@ -2,6 +2,7 @@ import {
   selectCurrentState,
   setCurrentStateWithId,
   useAddMemoryMutation,
+  useAddStateMutation,
 } from "../redux/store";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,36 +12,34 @@ import Typography from "@mui/material/Typography";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { useDispatch, useSelector } from "react-redux";
-import { useAddStateMutation } from "../redux/store";
 import dayjs from "dayjs";
 import { isBefore } from "date-fns";
 import { Stack } from "@mui/material";
+import {
+  TMemoryInsert,
+  TMemoryValidation,
+} from "../redux/slices/memories/types";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentUser } from "../redux/slices/auth/authSlice";
 
 type AddMemoryFormProps = {
   handleBackClick: () => void;
 };
 
-type AddMemoryFormValues = {
-  title: string;
-  city: string;
-  startDate: Date | null;
-  endDate: Date;
-  description: string;
-};
-
 function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
   const currentState = useSelector(selectCurrentState);
-  const [addMemory] = useAddMemoryMutation();
+  const currentUser = useSelector(selectCurrentUser);
   const [addState] = useAddStateMutation();
+  const [addMemory] = useAddMemoryMutation();
+
   const dispatch = useDispatch();
 
-  const addMemoryForm = useForm<AddMemoryFormValues>({
+  const addMemoryForm = useForm<TMemoryValidation>({
     defaultValues: {
       title: "",
       city: "",
-      startDate: null,
-      endDate: dayjs().toDate(),
+      start_date: null,
+      end_date: dayjs().toDate(),
       description: "",
     },
   });
@@ -49,35 +48,47 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
     addMemoryForm;
   const { errors } = formState;
 
-  const onSubmit: SubmitHandler<AddMemoryFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<TMemoryValidation> = async (formdata) => {
     // If there are no memories in the state, add the state first
-    if (currentState.totalStateMemoryCount <= 0) {
-      const addStateData = await addState({
-        name: currentState.currentStateTitle,
-        abbreviation: currentState.currentStateAbbreviation,
+    console.log("AddMemoryForm currentState: ", currentState);
+
+    if (currentState.memoryCount === 0) {
+      const response = await addState({
+        name: currentState.name,
+        abbreviation: currentState.abbreviation,
+        user_id: currentUser?.id as string,
       }).unwrap();
 
-      dispatch(setCurrentStateWithId({ id: addStateData.id }));
+      console.log("AddMemoryForm state data: ", response);
+
+      dispatch(setCurrentStateWithId({ id: response.id }));
+
+      const memoryPayload: TMemoryInsert = {
+        ...formdata,
+        start_date: dayjs(formdata.start_date).format(),
+        end_date: dayjs(formdata.end_date).format(),
+        state_id: response.id,
+      };
 
       await addMemory({
-        ...data,
-        stateAbbreviation: currentState.currentStateAbbreviation,
-        stateId: addStateData.id,
+        ...memoryPayload,
       });
     } else {
       await addMemory({
-        ...data,
-        stateAbbreviation: currentState.currentStateAbbreviation,
-        stateId: currentState.id,
+        ...formdata,
+        start_date: dayjs(formdata.start_date).format(),
+        end_date: dayjs(formdata.end_date).format(),
+        state_id: currentState.id,
       });
     }
+
     handleBackClick();
   };
 
   return (
     <Stack alignItems="center">
       <Typography component="h1" variant="h5" sx={{ mb: 4 }}>
-        {`Add Memory for ${currentState.currentStateTitle}`}
+        {`Add Memory for ${currentState.name}`}
       </Typography>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -109,13 +120,15 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
           <Grid item xs={12} sm={4}>
             <Box display="flex" justifyContent="flex-end">
               <Controller
-                name="startDate"
+                name="start_date"
                 control={control}
                 rules={{
                   required: "required*",
+
                   validate: {
                     endDateAfterStartDate: (startDateValue) => {
-                      const endDateValue = getValues("endDate");
+                      const endDateValue = getValues("end_date");
+
                       if (startDateValue && endDateValue) {
                         return (
                           isBefore(startDateValue, endDateValue) ||
@@ -133,10 +146,10 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
                       label="Start Date"
                       slotProps={{
                         textField: {
-                          error: !!errors?.startDate,
+                          error: !!errors?.start_date,
                           helperText:
-                            errors.startDate && errors.startDate?.message,
-                          required: !!errors?.startDate,
+                            errors.start_date && errors.start_date?.message,
+                          required: !!errors?.start_date,
                         },
                       }}
                     />
@@ -148,7 +161,7 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
           <Grid item xs={12} sm={4}>
             <Box display="flex" justifyContent="flex-end">
               <Controller
-                name="endDate"
+                name="end_date"
                 control={control}
                 rules={{ required: "required" }}
                 render={({ field }) => (
@@ -158,8 +171,9 @@ function AddMemoryForm({ handleBackClick }: AddMemoryFormProps) {
                       label="End Date"
                       slotProps={{
                         textField: {
-                          error: !!errors?.endDate,
-                          helperText: errors.endDate && errors.endDate?.message,
+                          error: !!errors?.end_date,
+                          helperText:
+                            errors.end_date && errors.end_date?.message,
                         },
                       }}
                     />

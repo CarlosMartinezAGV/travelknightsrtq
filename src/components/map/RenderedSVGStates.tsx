@@ -1,24 +1,25 @@
 import { TState } from "../../redux/slices/states/types";
-import { states } from "./states";
+import { statesSVG } from "./states";
 
 type RenderedSVGStatesProps = {
   data: TState[] | undefined;
   handleModalOpen: (
-    id: string | undefined,
+    state_id: string | null,
     abbreviation: string,
     title: string
   ) => void;
 };
 
 function RenderedSVGStates({ data, handleModalOpen }: RenderedSVGStatesProps) {
-  const renderedStates = states.map(
-    ({ title, className, id: stateAbbreviation, ...props }) => {
-      let stateId: string | undefined = undefined;
+  const renderedStates = statesSVG.map(
+    ({ name, className, id: SVGabbreviation, ...props }) => {
+      // Set state_id if state is in supabase
+      let state_id: string | null = null;
 
       // Check if state is in state and add visited class
       const isVisited = data?.some(({ abbreviation, id }) => {
-        if (abbreviation === stateAbbreviation) {
-          stateId = id;
+        if (SVGabbreviation === abbreviation) {
+          state_id = id;
           return true;
         } else return false;
       });
@@ -27,13 +28,13 @@ function RenderedSVGStates({ data, handleModalOpen }: RenderedSVGStatesProps) {
       const stateVisitedClass = isVisited ? `${className} visited` : className;
       return (
         <path
-          key={stateAbbreviation}
-          id={stateAbbreviation}
+          key={SVGabbreviation}
+          id={SVGabbreviation}
           {...props}
           className={stateVisitedClass}
-          onClick={() => handleModalOpen(stateId, stateAbbreviation, title)}
+          onClick={() => handleModalOpen(state_id, SVGabbreviation, name)}
         >
-          <title>{title}</title>
+          <title>{name}</title>
         </path>
       );
     }
