@@ -10,6 +10,11 @@ const RequireAuth = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // check if the user is logged in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      refreshSession(session);
+    });
+
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "TOKEN_REFRESHED") {
         dispatch(refreshSession({ session }));
