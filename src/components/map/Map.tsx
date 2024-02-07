@@ -1,22 +1,19 @@
 import RenderedSVGStates from "./RenderedSVGStates";
 import { setCurrentState } from "../../redux/store";
-import EditMemoryForm from "../EditMemoryForm";
 import AbsoluteLoader from "../AbsoluteLoader";
 import { useDispatch } from "react-redux";
 import MemoryList from "../MemoryList";
 import { useState } from "react";
 import "../styles/map.css";
-import {
-  AppBar,
-  Box,
-  Dialog,
-  DialogContent,
-  Fade,
-  IconButton,
-  Toolbar,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Fade from "@mui/material/Fade";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useTheme from "@mui/material/styles/useTheme";
 import CloseIcon from "@mui/icons-material/Close";
 import GetStates from "../../redux/hooks/GetStates";
 
@@ -26,11 +23,10 @@ function Map() {
 
   // TODO: Error handling component
   if (error) {
-    console.log(`Map.tsx error: ${error}`);
+    throw new Error(`Map.tsx error: ${error}`);
   }
 
   const [isShowDialog, setIsShowDialog] = useState(false);
-  const [isShowEditMemory, setIsShowEditMemory] = useState(false);
 
   const handleModalOpen = (
     state_id: string | null,
@@ -49,11 +45,6 @@ function Map() {
 
   const handleModalClose = () => {
     setIsShowDialog(false);
-    setIsShowEditMemory(false);
-  };
-
-  const handleEditMemoryToggle = () => {
-    setIsShowEditMemory((prev) => !prev);
   };
 
   // Theme and full screen for dialog modal on mobile
@@ -87,11 +78,7 @@ function Map() {
             </AppBar>
           )}
           <DialogContent>
-            {isShowEditMemory ? (
-              <EditMemoryForm handleBackClick={handleEditMemoryToggle} />
-            ) : (
-              <MemoryList handleEditMemoryToggle={handleEditMemoryToggle} />
-            )}
+            <MemoryList />
           </DialogContent>
         </Box>
       </Fade>

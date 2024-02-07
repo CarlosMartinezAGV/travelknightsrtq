@@ -19,11 +19,10 @@ export const memoriesApi = apiSlice.injectEndpoints({
           if (error) {
             throw new Error(`addMemory error: ${error.message}`);
           }
+          // Return the newly added memory
           return { data: data[0] };
         },
-        invalidatesTags: (_result, _error, memory) => [
-          { type: "Memories", state_id: memory.state_id },
-        ],
+        invalidatesTags: () => [{ type: "Memories", id: "LIST" }],
       }),
       fetchMemories: builder.query<TMemory[] | null, TMemory["state_id"]>({
         queryFn: async (state_id) => {
@@ -36,11 +35,13 @@ export const memoriesApi = apiSlice.injectEndpoints({
           const { data, error } = await supabase
             .from("memories")
             .select("*")
-            .eq("state_id", state_id);
+            .eq("state_id", state_id)
+            .order("start_date");
 
           if (error) {
             throw { message: `fetchMemories error: ${error.message}` };
           }
+          // Return an array of memories
           return { data };
         },
         providesTags: (result) => {
@@ -51,6 +52,7 @@ export const memoriesApi = apiSlice.injectEndpoints({
                   id: memory.id,
                   state_id: memory.state_id,
                 })),
+                { type: "Memories", id: "LIST" },
               ]
             : [{ type: "Memories", id: "LIST" }];
         },
@@ -69,13 +71,14 @@ export const memoriesApi = apiSlice.injectEndpoints({
           if (error) {
             throw new Error(`updateMemory error: ${error.message}`);
           }
+          // Return the updated memory
           return { data: data[0] };
         },
         invalidatesTags: (_result, _error, memory) => [
           { type: "Memories", id: memory.id, state_id: memory.state_id },
         ],
       }),
-      removeMemory: builder.mutation<null, TMemory>({
+      deleteMemory: builder.mutation<null, TMemory>({
         queryFn: async (memory) => {
           if (!memory) {
             throw new Error("removeMemory error: no memory provided");
@@ -90,6 +93,7 @@ export const memoriesApi = apiSlice.injectEndpoints({
             throw new Error(`removeMemory error: ${error.message}`);
           }
 
+          // Return null to indicate that the memory was removed
           return { data: null };
         },
         invalidatesTags: (_result, _error, memory) => [
@@ -106,5 +110,5 @@ export const {
   useAddMemoryMutation,
   useFetchMemoriesQuery,
   useUpdateMemoryMutation,
-  useRemoveMemoryMutation,
+  useDeleteMemoryMutation,
 } = memoriesApi;

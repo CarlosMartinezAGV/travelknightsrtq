@@ -63,13 +63,13 @@ export {
 export {
   useAddStateMutation,
   useFetchStatesQuery,
-  useRemoveStateMutation,
+  useDeleteStateMutation,
 } from "./slices/states/statesApi";
 export {
   useAddMemoryMutation,
   useFetchMemoriesQuery,
   useUpdateMemoryMutation,
-  useRemoveMemoryMutation,
+  useDeleteMemoryMutation,
 } from "./slices/memories/memoriesApi";
 
 export const selectCurrentState = (state: RootState) => state.currentState;

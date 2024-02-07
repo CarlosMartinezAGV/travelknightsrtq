@@ -28,6 +28,30 @@ export const theme = createTheme({
         },
       },
     },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: {
+          backgroundColor: QUATERNARYCOLOR,
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: SECONDARYCOLOR,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          backgroundColor: SECONDARYCOLOR,
+          label: {
+            color: PRIMARYCOLOR,
+          },
+        },
+      },
+    },
   },
 });
 

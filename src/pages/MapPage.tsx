@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import ToolBar from "../components/ToolBar";
 import AppBar from "@mui/material/AppBar";
 import Map from "../components/map/Map";
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 
 function MapPage() {
   return (
@@ -21,7 +21,7 @@ function MapPage() {
         id="map-page"
         component="main"
         maxWidth="xl"
-        sx={{ paddingTop: 12 }}
+        sx={{ paddingTop: 10 }}
       >
         <Map />
       </Container>

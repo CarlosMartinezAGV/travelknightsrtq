@@ -3,18 +3,20 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   selectCurrentState,
-  useRemoveMemoryMutation,
-  useRemoveStateMutation,
+  useDeleteMemoryMutation,
+  useDeleteStateMutation,
   setMemoryToEdit,
   setResetCount,
 } from "../redux/store";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useDispatch, useSelector } from "react-redux";
 import Accordion from "@mui/material/Accordion";
+import Stack from "@mui/material/Stack";
 import { style } from "./styles/main";
-import { Stack } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import { TMemory } from "../redux/slices/memories/types";
+import useLoadingState from "../hooks/use-LoadingState";
+import dayjs from "dayjs";
 
 type MemoryListItemProps = {
   memory: TMemory;
@@ -23,7 +25,8 @@ type MemoryListItemProps = {
     panel: string
   ) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
   handleLoading: (isLoadingFlag: boolean) => void;
-  handleEditMemoryToggle: () => void;
+  handleBackClick: () => void;
+  handleMemoryUpsert: (insert: boolean) => void;
 };
 
 function MemoryListItem({
@@ -31,17 +34,23 @@ function MemoryListItem({
   expanded,
   handleAccordionChange,
   handleLoading,
-  handleEditMemoryToggle,
+  handleBackClick,
+  handleMemoryUpsert,
 }: MemoryListItemProps) {
   const currentState = useSelector(selectCurrentState);
-  const [removeMemory] = useRemoveMemoryMutation();
-  const [removeState] = useRemoveStateMutation();
+  const [removeMemory, { isLoading: isLoadingDeleteMemory }] =
+    useDeleteMemoryMutation();
+  const [removeState, { isLoading: isLoadingDeleteState }] =
+    useDeleteStateMutation();
   const dispatch = useDispatch();
 
-  // Async function to remove memory
-  // and show progress indicator
-  const handleDeleteMemory = async () => {
-    handleLoading(true);
+  useLoadingState({
+    handleLoading,
+    flags: [isLoadingDeleteMemory, isLoadingDeleteState],
+  });
+
+  // Remove memory and state if it's the last memory in the state
+  const handleDeleteMemoryandState = async () => {
     // Remove memory first, then state when it's the last memory in the state
     await removeMemory(memory);
 
@@ -49,12 +58,13 @@ function MemoryListItem({
       await removeState(memory.state_id);
       dispatch(setResetCount());
     }
-    handleLoading(false);
+    // Return to list view
+    handleBackClick();
   };
 
   const handleEditMemory = () => {
     dispatch(setMemoryToEdit(memory));
-    handleEditMemoryToggle();
+    handleMemoryUpsert(false);
   };
 
   return (
@@ -78,10 +88,10 @@ function MemoryListItem({
           <Typography flex={1}>{memory.title}</Typography>
           <Typography flex={1}>{memory.city}</Typography>
           <Typography flex={1}>
-            {new Date(memory.start_date).toLocaleDateString("en-US")}
+            {dayjs(memory.start_date).format("MM/DD/YYYY")}
           </Typography>
           <Typography flex={1}>
-            {new Date(memory.end_date).toLocaleDateString("en-US")}
+            {dayjs(memory.end_date).format("MM/DD/YYYY")}
           </Typography>
         </Stack>
       </AccordionSummary>
@@ -98,7 +108,7 @@ function MemoryListItem({
         gap={2}
         mb={2}
       >
-        <Button onClick={handleDeleteMemory} color="error">
+        <Button onClick={handleDeleteMemoryandState} color="error">
           Delete
         </Button>
         <Button onClick={handleEditMemory} variant="outlined" color="primary">
