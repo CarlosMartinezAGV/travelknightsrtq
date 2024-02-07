@@ -1,18 +1,13 @@
-import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import { useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
-import Menu from "@mui/material/Menu";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
-import { supabase } from "../supabase/main";
-import { logout } from "../redux/slices/auth/authSlice";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import Toolbar from "@mui/material/Toolbar";
+import Logout from "../redux/hooks/Logout";
+import Menu from "@mui/material/Menu";
+import { useState } from "react";
 
 function ToolBar() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,20 +16,6 @@ function ToolBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Supabase Error logging out:", error.message);
-        return;
-      }
-      dispatch(logout());
-      navigate("/");
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
   };
 
   return (
@@ -62,7 +43,7 @@ function ToolBar() {
           id="menu-appbar"
           anchorEl={anchorEl}
           anchorOrigin={{
-            vertical: "top",
+            vertical: "bottom",
             horizontal: "right",
           }}
           keepMounted
@@ -73,7 +54,7 @@ function ToolBar() {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={Logout}>Logout</MenuItem>
         </Menu>
       </div>
     </Toolbar>

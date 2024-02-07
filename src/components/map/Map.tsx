@@ -15,13 +15,12 @@ import Fade from "@mui/material/Fade";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/material/styles/useTheme";
 import CloseIcon from "@mui/icons-material/Close";
-import GetStates from "../../redux/hooks/GetStates";
+import useGetStates from "../../redux/hooks/useGetStates";
 
 function Map() {
   const dispatch = useDispatch();
-  const { data, error, isLoading } = GetStates();
+  const { data, error, isLoading } = useGetStates();
 
-  // TODO: Error handling component
   if (error) {
     throw new Error(`Map.tsx error: ${error}`);
   }

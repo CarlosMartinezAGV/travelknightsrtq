@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import { TMemory } from "../redux/slices/memories/types";
-import GetMemories from "../redux/hooks/GetMemories";
+import useGetMemories from "../redux/hooks/useGetMemories";
 import UpsertMemoryForm from "./UpsertMemoryForm";
 import Skeleton from "@mui/material/Skeleton";
 
@@ -23,7 +23,7 @@ function MemoryList() {
     error: memoriesError,
     isLoading: isLoadingMemories,
     currentState,
-  } = GetMemories();
+  } = useGetMemories();
 
   // Set total state memory count
   // Set current state from first memory stateId

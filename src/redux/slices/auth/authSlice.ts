@@ -15,6 +15,9 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.session = action.payload.session;
     },
+    refreshSession: (state, action) => {
+      state.session = action.payload.session;
+    },
     logout: (state) => {
       state.user = null;
       state.session = null;
@@ -22,10 +25,8 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, refreshSession, logout } = authSlice.actions;
 export default authSlice.reducer;
 
-export const selectCurrentAccessToken = (state: RootState) =>
-  state.auth.session?.access_token;
+export const selectCurrentSession = (state: RootState) => state.auth.session;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
-export const selectCurrentAuth = (state: RootState) => state.auth;

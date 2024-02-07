@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useFetchStatesQuery } from "../store";
 import { selectCurrentUser } from "../slices/auth/authSlice";
 
-function GetStates() {
+function useGetStates() {
   const user = useSelector(selectCurrentUser);
 
   if (!user) {
@@ -14,4 +14,4 @@ function GetStates() {
   return { data, error, isLoading };
 }
 
-export default GetStates;
+export default useGetStates;

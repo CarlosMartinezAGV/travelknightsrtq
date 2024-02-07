@@ -1,48 +1,30 @@
+import { logout, refreshSession, selectCurrentSession } from "./authSlice";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { selectCurrentAccessToken } from "./authSlice";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { supabase } from "../../../supabase/main";
+import { useEffect } from "react";
 
 const RequireAuth = () => {
-  const access_token = useSelector(selectCurrentAccessToken);
+  const isLoggedIn = useSelector(selectCurrentSession);
+  const dispatch = useDispatch();
+  const location = useLocation();
 
   useEffect(() => {
-    console.log("RequireAuth: useEffect");
-
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log(event, session);
-
-      if (event === "INITIAL_SESSION") {
-        // handle initial session
-        console.log("INITIAL_SESSION");
-      } else if (event === "SIGNED_IN") {
-        // handle sign in event
-        console.log("SIGNED_IN");
+      if (event === "TOKEN_REFRESHED") {
+        dispatch(refreshSession({ session }));
       } else if (event === "SIGNED_OUT") {
-        // handle sign out event
-        console.log("SIGNED_OUT");
-      } else if (event === "PASSWORD_RECOVERY") {
-        // handle password recovery event
-        console.log("PASSWORD_RECOVERY");
-      } else if (event === "TOKEN_REFRESHED") {
-        // handle token refreshed event
-        console.log("TOKEN_REFRESHED");
-      } else if (event === "USER_UPDATED") {
-        // handle user updated event
-        console.log("USER_UPDATED");
+        dispatch(logout());
       }
     });
 
     // call unsubscribe to remove the callback
-    return data.subscription.unsubscribe();
-  }, []);
+    return () => {
+      data.subscription.unsubscribe();
+    };
+  }, [dispatch]);
 
-  // use supabase auth state to check if user logged in
-  // if not, redirect to login page
-  const location = useLocation();
-
-  return access_token ? (
+  return isLoggedIn ? (
     <Outlet />
   ) : (
     <Navigate to="/" state={{ from: location }} replace />

@@ -56,7 +56,7 @@ export default function SignUp() {
         navigate("/");
       }, 3000);
     } catch (error) {
-      console.log("Error: ", error);
+      throw new Error(`Error: ${error}`);
     }
   };
 
