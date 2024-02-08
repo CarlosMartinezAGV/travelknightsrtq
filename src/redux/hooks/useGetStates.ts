@@ -1,9 +1,8 @@
-import { useSelector } from "react-redux";
 import { useFetchStatesQuery } from "../store";
-import { selectCurrentUser } from "../slices/auth/authSlice";
+import { useAuth } from "../slices/auth/utils";
 
 function useGetStates() {
-  const user = useSelector(selectCurrentUser);
+  const { user } = useAuth();
 
   if (!user) {
     throw new Error("User not found while fetching states.");

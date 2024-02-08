@@ -19,11 +19,11 @@ import {
   TMemoryInsert,
   TMemoryValidation,
 } from "../redux/slices/memories/types";
-import { selectCurrentUser } from "../redux/slices/auth/authSlice";
 import useLoadingState from "../hooks/use-LoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import { isBefore } from "date-fns";
 import dayjs from "dayjs";
+import { useAuth } from "../redux/slices/auth/utils";
 
 type UpsertMemoryFormProps = {
   handleBackClick: () => void;
@@ -39,7 +39,8 @@ function UpsertMemoryForm({
   const dispatch = useDispatch();
 
   const currentState = useSelector(selectCurrentState);
-  const currentUser = useSelector(selectCurrentUser);
+  const { user } = useAuth();
+  // const currentUser = useSelector(selectCurrentUser);
   const currentMemory = useSelector(selectCurrentMemory);
 
   const [addState, { isLoading: isLoadingInsertState }] = useAddStateMutation();
@@ -84,7 +85,7 @@ function UpsertMemoryForm({
         const response = await addState({
           name: currentState.name,
           abbreviation: currentState.abbreviation,
-          user_id: currentUser?.id as string,
+          user_id: user?.id as string,
         }).unwrap();
 
         dispatch(setCurrentStateWithId({ id: response.id }));

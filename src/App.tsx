@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import MapPage from "./pages/MapPage";
 
 function App() {
+  // ! Fix the auth provider
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
@@ -15,8 +16,8 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
 
-          {/* protected routes */}
           <Route element={<RequireAuth />}>
+            {/* protected routes */}
             <Route path="/map" element={<MapPage />} />
           </Route>
         </Routes>
