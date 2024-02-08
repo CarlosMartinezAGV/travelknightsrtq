@@ -21,12 +21,13 @@ function ToolBar() {
   return (
     <Toolbar sx={{ backgroundColor: "primary" }}>
       <Typography
-        variant="h5"
+        variant="h3"
         component="div"
-        sx={{ flexGrow: 1 }}
-        style={{ textAlign: "center" }}
+        textAlign={"center"}
+        color={"primary.light"}
+        width={"100%"}
       >
-        Travel Knights
+        TravelKnights
       </Typography>
       <div>
         <IconButton
@@ -35,7 +36,7 @@ function ToolBar() {
           aria-controls="menu-appbar"
           aria-haspopup="true"
           onClick={handleMenu}
-          color="inherit"
+          sx={{ color: "primary.light" }}
         >
           <AccountCircle />
         </IconButton>

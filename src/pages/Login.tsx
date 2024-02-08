@@ -15,6 +15,7 @@ import { useContext, useEffect } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { AuthContext } from "../redux/slices/auth/AuthProvider";
+import Copyright from "../components/Copyright";
 function Login() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -27,13 +28,18 @@ function Login() {
   }, [user, navigate]);
 
   return (
-    <Grid container component="main" sx={{ minHeight: "100dvh" }}>
+    <Grid
+      container
+      component="main"
+      sx={{ minHeight: "100dvh", minWidth: "100dvw" }}
+    >
       <CssBaseline />
       <Grid
         item
         xs={false}
-        sm={4}
-        md={7}
+        sm={false}
+        md={false}
+        lg={7}
         sx={{
           backgroundImage: "url('src/assets/images/knightonplane.webp')",
           backgroundRepeat: "no-repeat",
@@ -48,8 +54,9 @@ function Login() {
       <Grid
         item
         xs={12}
-        sm={8}
-        md={5}
+        sm={12}
+        md={12}
+        lg={5}
         component={Paper}
         elevation={6}
         square
@@ -57,14 +64,20 @@ function Login() {
           backgroundColor: "background.default",
         }}
       >
-        <Stack pt={14} px={10}>
+        <Stack
+          pt={10}
+          px={{ xs: 2.4, sm: 0 }}
+          maxWidth={{ xs: 350, sm: 400 }}
+          margin="auto"
+        >
           <Typography
             component="h1"
-            variant="h2"
+            variant="h1"
             fontWeight={2}
             textAlign="center"
             color={PRIMARYCOLOR}
             mb={2}
+            flex={1}
           >
             TravelKnights
           </Typography>
@@ -93,6 +106,10 @@ function Login() {
                     messageBackground: SECONDARYCOLOR,
                     messageBackgroundDanger: SECONDARYCOLOR,
                   },
+                  space: {},
+                  borderWidths: {
+                    inputBorderWidth: "2px",
+                  },
                 },
               },
             }}
@@ -112,14 +129,13 @@ function Login() {
                 },
               },
             }}
-            // queryParams={{
-            //   // access_type: "offline",
-            //   display: "popup",
-            //   prompt: "consent",
-            //   hd: "localhost:5173/",
-            // }}
             providers={["google", "github"]}
             supabaseClient={supabase}
+            socialLayout="horizontal"
+            providerScopes={{
+              google: "email",
+              github: "repo",
+            }}
           />
         </Stack>
         <Box
@@ -128,7 +144,9 @@ function Login() {
             py: 3,
             px: 2,
           }}
-        ></Box>
+        >
+          <Copyright />
+        </Box>
       </Grid>
     </Grid>
   );

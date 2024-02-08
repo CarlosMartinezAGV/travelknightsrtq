@@ -1,5 +1,4 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
 import ToolBar from "../components/ToolBar";
 import AppBar from "@mui/material/AppBar";
 import Map from "../components/map/Map";
@@ -17,14 +16,15 @@ function MapPage() {
       <AppBar>
         <ToolBar />
       </AppBar>
-      <Container
+      <Stack
+        pt={10}
+        maxHeight="100dvh"
+        width="100%"
         id="map-page"
         component="main"
-        maxWidth="xl"
-        sx={{ paddingTop: 10 }}
       >
         <Map />
-      </Container>
+      </Stack>
     </Stack>
   );
 }

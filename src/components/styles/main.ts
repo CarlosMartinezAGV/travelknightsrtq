@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
 export const PRIMARYCOLOR = "#65743a";
 export const SECONDARYCOLOR = "#faf0ca";
@@ -9,51 +9,69 @@ export const SENARYCOLOR = "#f4f4f4";
 
 export const ERRORCOLOR = "#d32f2f";
 
-export const theme = createTheme({
-  palette: {
-    primary: {
-      main: PRIMARYCOLOR,
-      light: SECONDARYCOLOR,
-      dark: TERTIARYCOLOR,
-    },
-    background: {
-      default: SECONDARYCOLOR,
-    },
-  },
-  components: {
-    MuiDialog: {
-      styleOverrides: {
-        paper: {
-          backgroundColor: SECONDARYCOLOR,
-        },
+export const theme = responsiveFontSizes(
+  createTheme({
+    palette: {
+      primary: {
+        main: PRIMARYCOLOR,
+        light: SECONDARYCOLOR,
+        dark: TERTIARYCOLOR,
+      },
+      background: {
+        default: SECONDARYCOLOR,
       },
     },
-    MuiAccordionDetails: {
-      styleOverrides: {
-        root: {
-          backgroundColor: QUATERNARYCOLOR,
+    components: {
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            fontFamily: "Roboto",
+          },
+          h1: {
+            fontSize: "2.75rem",
+            "@media (min-width:400px)": {
+              fontSize: "3.2rem",
+            },
+            "@media (min-width:600px)": {
+              fontSize: "4rem",
+            },
+          },
         },
       },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundColor: SECONDARYCOLOR,
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: SECONDARYCOLOR,
+          },
         },
       },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          backgroundColor: SECONDARYCOLOR,
-          label: {
-            color: PRIMARYCOLOR,
+      MuiAccordionDetails: {
+        styleOverrides: {
+          root: {
+            backgroundColor: QUATERNARYCOLOR,
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundColor: SECONDARYCOLOR,
+          },
+        },
+      },
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            backgroundColor: SECONDARYCOLOR,
+            label: {
+              color: PRIMARYCOLOR,
+            },
           },
         },
       },
     },
-  },
-});
+  })
+);
 
 export const style = {
   accordionContainer: {

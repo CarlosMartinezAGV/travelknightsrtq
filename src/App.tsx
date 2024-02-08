@@ -8,7 +8,6 @@ import SignUp from "./pages/SignUp";
 import MapPage from "./pages/MapPage";
 
 function App() {
-  // ! Fix the auth provider
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>

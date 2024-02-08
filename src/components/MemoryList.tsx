@@ -76,8 +76,6 @@ function MemoryList() {
   if (isLoading || isLoadingMemories) {
     content = (
       <>
-        {/* <Skeleton variant="text" width="100%" height={80} animation="wave" /> */}
-        {/* <Skeleton variant="text" width="100%" height={80} animation="wave" /> */}
         <Skeleton
           variant="rectangular"
           width="100%"
@@ -90,12 +88,6 @@ function MemoryList() {
           height={40}
           animation="wave"
         />
-        {/* <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={80}
-          animation="wave"
-        /> */}
       </>
     );
   }
@@ -128,7 +120,9 @@ function MemoryList() {
         alignItems="center"
         id="no-memories-message"
       >
-        No Memories Yet. Add One!
+        <Typography variant="h6" mb={2}>
+          No Memories Yet. Add One!
+        </Typography>
       </Stack>
     );
   }
