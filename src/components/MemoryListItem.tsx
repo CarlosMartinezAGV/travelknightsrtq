@@ -12,7 +12,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Accordion from "@mui/material/Accordion";
 import Stack from "@mui/material/Stack";
-import { style } from "./styles/main";
 import { useDispatch, useSelector } from "react-redux";
 import { TMemory } from "../redux/slices/memories/types";
 import useLoadingState from "../hooks/use-LoadingState";
@@ -71,7 +70,6 @@ function MemoryListItem({
     <Accordion
       expanded={expanded === memory.id}
       onChange={handleAccordionChange(memory.id)}
-      sx={style.accordionContainer}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -106,7 +104,7 @@ function MemoryListItem({
         justifyContent="center"
         alignItems="center"
         gap={2}
-        mb={2}
+        py={2}
       >
         <Button onClick={handleDeleteMemoryandState} color="error">
           Delete

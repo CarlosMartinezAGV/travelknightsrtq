@@ -8,14 +8,14 @@ export default function Copyright(props: any) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {"© "}
+      {new Date().getFullYear()}{" "}
       <Link
         color="inherit"
         href="https://github.com/CarlosMartinezAGV/travelknightsrtq"
       >
-        TravelKnightsrtq
-      </Link>{" "}
-      {new Date().getFullYear()}
+        TravelKnights
+      </Link>
       {"."}
     </Typography>
   );

@@ -45,10 +45,20 @@ export const theme = responsiveFontSizes(
           },
         },
       },
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            backgroundColor: QUATERNARYCOLOR,
+            border: `2px solid ${TERTIARYCOLOR}`,
+          },
+        },
+      },
       MuiAccordionDetails: {
         styleOverrides: {
           root: {
             backgroundColor: QUATERNARYCOLOR,
+            borderTop: `2px solid ${TERTIARYCOLOR}`,
+            borderBottom: `2px solid ${TERTIARYCOLOR}`,
           },
         },
       },
@@ -56,6 +66,13 @@ export const theme = responsiveFontSizes(
         styleOverrides: {
           root: {
             backgroundColor: SECONDARYCOLOR,
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          outlined: {
+            borderWidth: "2px",
           },
         },
       },
@@ -74,14 +91,6 @@ export const theme = responsiveFontSizes(
 );
 
 export const style = {
-  accordionContainer: {
-    border: "3px solid",
-    borderColor: TERTIARYCOLOR,
-    borderRadius: "0.2rem",
-    bgcolor: QUATERNARYCOLOR,
-    marginBottom: "0.25rem",
-  },
-  accordionDetailsContainer: { borderTop: `3px solid ${TERTIARYCOLOR}` },
   absoluteLoaderContainer: {
     zIndex: 9999,
     position: "fixed",

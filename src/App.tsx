@@ -4,7 +4,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./components/styles/main";
 
 import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
 import MapPage from "./pages/MapPage";
 
 function App() {
@@ -13,7 +12,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
 
           <Route element={<RequireAuth />}>
             {/* protected routes */}
