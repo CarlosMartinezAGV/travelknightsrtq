@@ -1,22 +1,11 @@
-import {
-  ERRORCOLOR,
-  PRIMARYCOLOR,
-  QUATERNARYCOLOR,
-  SECONDARYCOLOR,
-  TERTIARYCOLOR,
-} from "../components/styles/main";
-import Typography from "@mui/material/Typography";
+import { AuthContext } from "../redux/slices/auth/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../supabase/main";
+import { useContext, useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { useContext, useEffect } from "react";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { AuthContext } from "../redux/slices/auth/AuthProvider";
-import Copyright from "../components/Copyright";
+import AuthUI from "../components/AuthUI";
+import Footer from "../components/Footer";
 
 function Login() {
   const navigate = useNavigate();
@@ -71,83 +60,9 @@ function Login() {
           maxWidth={{ xs: 350, sm: 400 }}
           margin="auto"
         >
-          <Typography
-            component="h1"
-            variant="h1"
-            fontWeight={2}
-            textAlign="center"
-            color={PRIMARYCOLOR}
-            mb={2}
-            flex={1}
-          >
-            TravelKnights
-          </Typography>
-          <Auth
-            appearance={{
-              theme: ThemeSupa,
-              style: {
-                container: {
-                  backgroundColor: SECONDARYCOLOR,
-                },
-                message: {
-                  borderWidth: "2px",
-                },
-              },
-              variables: {
-                default: {
-                  colors: {
-                    brand: PRIMARYCOLOR,
-                    brandAccent: TERTIARYCOLOR,
-                    inputBorder: PRIMARYCOLOR,
-                    inputLabelText: PRIMARYCOLOR,
-                    inputBorderFocus: TERTIARYCOLOR,
-                    dividerBackground: PRIMARYCOLOR,
-                    anchorTextColor: PRIMARYCOLOR,
-                    anchorTextHoverColor: TERTIARYCOLOR,
-                    defaultButtonBackground: PRIMARYCOLOR,
-                    defaultButtonText: SECONDARYCOLOR,
-                    defaultButtonBackgroundHover: TERTIARYCOLOR,
-                    messageBackground: QUATERNARYCOLOR,
-                    messageBackgroundDanger: QUATERNARYCOLOR,
-                    messageBorder: PRIMARYCOLOR,
-                    messageBorderDanger: ERRORCOLOR,
-                  },
-                  borderWidths: {
-                    inputBorderWidth: "2px",
-                  },
-                },
-              },
-            }}
-            localization={{
-              variables: {
-                sign_in: {
-                  email_input_placeholder: "Email address",
-                  password_label: "Password",
-                  password_input_placeholder: "Password",
-                },
-                sign_up: {
-                  email_input_placeholder: "Email address",
-                  password_input_placeholder: "Password",
-                },
-                forgotten_password: {
-                  email_input_placeholder: "Email address",
-                },
-              },
-            }}
-            providers={["google", "github"]}
-            supabaseClient={supabase}
-            socialLayout="horizontal"
-          />
+          <AuthUI />
         </Stack>
-        <Box
-          component="footer"
-          sx={{
-            py: 3,
-            px: 2,
-          }}
-        >
-          <Copyright />
-        </Box>
+        <Footer />
       </Grid>
     </Grid>
   );
