@@ -1,12 +1,10 @@
 import { z } from "zod";
-// AUTHENTICATION
-export const loginCredentialsSchema = z.object({
-  email: z.string().min(1, "Invalid Email").email(),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
 
-export const signUpCredentialsSchema = loginCredentialsSchema
-  .extend({
+// AUTHENTICATION
+
+export const resetPasswordSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z
       .string()
       .min(6, "Password must be at least 6 characters"),
@@ -16,5 +14,7 @@ export const signUpCredentialsSchema = loginCredentialsSchema
     path: ["confirmPassword"],
   });
 
-export type TSignUpCredentials = z.infer<typeof signUpCredentialsSchema>;
-export type TLoginCredentials = z.infer<typeof loginCredentialsSchema>;
+// Types
+export type TResetPassword = z.infer<typeof resetPasswordSchema>;
+
+/**************************************************************************/
