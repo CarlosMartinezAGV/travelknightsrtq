@@ -106,7 +106,6 @@ function Login() {
                     messageBackground: SECONDARYCOLOR,
                     messageBackgroundDanger: SECONDARYCOLOR,
                   },
-                  space: {},
                   borderWidths: {
                     inputBorderWidth: "2px",
                   },
@@ -132,10 +131,6 @@ function Login() {
             providers={["google", "github"]}
             supabaseClient={supabase}
             socialLayout="horizontal"
-            providerScopes={{
-              google: "email",
-              github: "repo",
-            }}
           />
         </Stack>
         <Box
