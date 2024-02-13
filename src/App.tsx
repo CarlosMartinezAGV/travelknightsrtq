@@ -3,14 +3,12 @@ import RequireAuth from "./redux/slices/auth/RequireAuth";
 
 import Login from "./pages/Login";
 import MapPage from "./pages/MapPage";
-import PasswordReset from "./pages/PasswordReset";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/reset-password" element={<PasswordReset />} />
 
         <Route element={<RequireAuth />}>
           {/* protected routes */}
