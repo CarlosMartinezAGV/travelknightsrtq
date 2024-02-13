@@ -1,4 +1,4 @@
-import { supabase } from "../../supabase/main";
+import { supabase } from "../../../supabase/main";
 
 async function Logout() {
   try {

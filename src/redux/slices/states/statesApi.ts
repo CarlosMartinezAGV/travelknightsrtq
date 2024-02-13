@@ -1,4 +1,4 @@
-import { supabase } from "../../../supabase/main";
+import { supabase } from "../../../../supabase/main";
 import { apiSlice } from "../../api/apiSlice";
 import { TState, TStateInsert } from "./types";
 

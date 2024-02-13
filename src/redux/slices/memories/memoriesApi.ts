@@ -1,6 +1,6 @@
 import { apiSlice } from "../../api/apiSlice";
 import { TMemory, TMemoryInsert } from "./types";
-import { supabase } from "../../../supabase/main";
+import { supabase } from "../../../../supabase/main";
 
 export const memoriesApi = apiSlice.injectEndpoints({
   endpoints(builder) {

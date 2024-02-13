@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import { supabase } from "../../../supabase/main";
+import { supabase } from "../../../../supabase/main";
 import { useDispatch } from "react-redux";
 import { User } from "@supabase/supabase-js";
 

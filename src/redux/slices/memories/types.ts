@@ -1,4 +1,4 @@
-import { Tables, TablesInsert } from "../../../supabase/types/supabase";
+import { Tables, TablesInsert } from "../../../../supabase/types/supabase";
 import { Overwrite } from "../../utils";
 
 export type TMemory = Tables<"memories">;
