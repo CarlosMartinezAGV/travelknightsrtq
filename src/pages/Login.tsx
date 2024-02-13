@@ -31,7 +31,7 @@ function Login() {
         md={false}
         lg={7}
         sx={{
-          backgroundImage: "url('src/assets/images/knightonplane.webp')",
+          backgroundImage: "url('/assets/knightonplane.webp')",
           backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
             t.palette.mode === "light"
