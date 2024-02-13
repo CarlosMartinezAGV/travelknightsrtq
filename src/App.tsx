@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/password-reset" element={<PasswordReset />} />
+        <Route path="/reset-password" element={<PasswordReset />} />
 
         <Route element={<RequireAuth />}>
           {/* protected routes */}
