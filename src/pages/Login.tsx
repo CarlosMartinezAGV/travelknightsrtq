@@ -1,5 +1,7 @@
 import {
+  ERRORCOLOR,
   PRIMARYCOLOR,
+  QUATERNARYCOLOR,
   SECONDARYCOLOR,
   TERTIARYCOLOR,
 } from "../components/styles/main";
@@ -16,6 +18,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { AuthContext } from "../redux/slices/auth/AuthProvider";
 import Copyright from "../components/Copyright";
+
 function Login() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -88,6 +91,9 @@ function Login() {
                 container: {
                   backgroundColor: SECONDARYCOLOR,
                 },
+                message: {
+                  borderWidth: "2px",
+                },
               },
               variables: {
                 default: {
@@ -103,8 +109,10 @@ function Login() {
                     defaultButtonBackground: PRIMARYCOLOR,
                     defaultButtonText: SECONDARYCOLOR,
                     defaultButtonBackgroundHover: TERTIARYCOLOR,
-                    messageBackground: SECONDARYCOLOR,
-                    messageBackgroundDanger: SECONDARYCOLOR,
+                    messageBackground: QUATERNARYCOLOR,
+                    messageBackgroundDanger: QUATERNARYCOLOR,
+                    messageBorder: PRIMARYCOLOR,
+                    messageBorderDanger: ERRORCOLOR,
                   },
                   borderWidths: {
                     inputBorderWidth: "2px",
