@@ -1,4 +1,3 @@
-import CssBaseline from "@mui/material/CssBaseline";
 import ToolBar from "../components/ToolBar";
 import AppBar from "@mui/material/AppBar";
 import Map from "../components/map/Map";
@@ -12,7 +11,6 @@ function MapPage() {
       minHeight={"100dvh"}
       minWidth={"100dvw"}
     >
-      <CssBaseline />
       <AppBar>
         <ToolBar />
       </AppBar>

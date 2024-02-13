@@ -5,7 +5,6 @@ import {
   SECONDARYCOLOR,
   TERTIARYCOLOR,
 } from "../components/styles/main";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase/main";
@@ -36,7 +35,6 @@ function Login() {
       component="main"
       sx={{ minHeight: "100dvh", minWidth: "100dvw" }}
     >
-      <CssBaseline />
       <Grid
         item
         xs={false}
