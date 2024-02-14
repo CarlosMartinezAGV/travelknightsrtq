@@ -70,6 +70,7 @@ function MemoryListItem({
     <Accordion
       expanded={expanded === memory.id}
       onChange={handleAccordionChange(memory.id)}
+      sx={{ mb: 1.5 }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
