@@ -14,7 +14,7 @@ import Accordion from "@mui/material/Accordion";
 import Stack from "@mui/material/Stack";
 import { useDispatch, useSelector } from "react-redux";
 import { TMemory } from "../redux/slices/memories/types";
-import useLoadingState from "../hooks/use-LoadingState";
+import useLoadingState from "../hooks/useLoadingState";
 import dayjs from "dayjs";
 
 type MemoryListItemProps = {

@@ -19,7 +19,7 @@ import {
   TMemoryInsert,
   TMemoryValidation,
 } from "../redux/slices/memories/types";
-import useLoadingState from "../hooks/use-LoadingState";
+import useLoadingState from "../hooks/useLoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import { isBefore } from "date-fns";
 import dayjs from "dayjs";
