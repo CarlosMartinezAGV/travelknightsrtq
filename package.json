@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "update-types": "npx supabase gen types typescript --project-id 'hgkwvlaopmonpjzkbuoj' --schema public > supabase/types/supabase.ts"
+    "update-types": "npx supabase gen types typescript --project-id 'hgkwvlaopmonpjzkbuoj' --schema public > src/supabase/types/supabase.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
