@@ -4,7 +4,7 @@ import { statesSVG } from "./states";
 type RenderedSVGStatesProps = {
   data: TState[] | undefined;
   handleModalOpen: (
-    state_id: string | null,
+    state_id: number | null,
     abbreviation: string,
     title: string
   ) => void;
@@ -14,7 +14,7 @@ function RenderedSVGStates({ data, handleModalOpen }: RenderedSVGStatesProps) {
   const renderedStates = statesSVG.map(
     ({ name, className, id: SVGabbreviation, ...props }) => {
       // Set state_id if state is in supabase
-      let state_id: string | null = null;
+      let state_id: number | null = null;
 
       // Check if state is in state and add visited class
       const isVisited = data?.some(({ abbreviation, id }) => {

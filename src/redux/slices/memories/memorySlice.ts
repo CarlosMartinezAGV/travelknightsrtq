@@ -8,7 +8,7 @@ const initialState: TMemory = {
   description: "",
   start_date: "",
   end_date: "",
-  state_id: "",
+  state_id: 0,
 };
 
 const memorySlice = createSlice({

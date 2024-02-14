@@ -4,7 +4,7 @@ import { TState } from "./types";
 export type CurrentState = Omit<TState, "user_id"> & { memoryCount: number };
 
 const initialState: CurrentState = {
-  id: "",
+  id: 0,
   abbreviation: "",
   name: "",
   memoryCount: 0,

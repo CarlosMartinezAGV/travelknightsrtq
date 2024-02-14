@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       memories: {
@@ -16,7 +16,7 @@ export interface Database {
           end_date: string
           id: string
           start_date: string
-          state_id: string
+          state_id: number
           title: string
         }
         Insert: {
@@ -25,7 +25,7 @@ export interface Database {
           end_date: string
           id?: string
           start_date: string
-          state_id: string
+          state_id: number
           title: string
         }
         Update: {
@@ -34,12 +34,12 @@ export interface Database {
           end_date?: string
           id?: string
           start_date?: string
-          state_id?: string
+          state_id?: number
           title?: string
         }
         Relationships: [
           {
-            foreignKeyName: "memories_state_id_fkey"
+            foreignKeyName: "public_memories_state_id_fkey"
             columns: ["state_id"]
             isOneToOne: false
             referencedRelation: "states"
@@ -50,19 +50,19 @@ export interface Database {
       states: {
         Row: {
           abbreviation: string
-          id: string
+          id: number
           name: string
           user_id: string
         }
         Insert: {
           abbreviation: string
-          id?: string
+          id?: never
           name: string
           user_id: string
         }
         Update: {
           abbreviation?: string
-          id?: string
+          id?: never
           name?: string
           user_id?: string
         }
