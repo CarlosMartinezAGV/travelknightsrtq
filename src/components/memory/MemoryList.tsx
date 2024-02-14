@@ -7,9 +7,9 @@ import Stack from "@mui/material/Stack";
 import { TMemory } from "../../redux/slices/memories/types";
 import useGetMemories from "../../redux/hooks/useGetMemories";
 import UpsertMemoryForm from "./UpsertMemoryForm";
-import Skeleton from "@mui/material/Skeleton";
 import useMemoryActions from "../../hooks/useMemoryActions";
 import MemoryListItemsContainer from "./MemoryListItemsContainer";
+import MemoryListItemsSkeleton from "./MemoryListItemsSkeleton";
 
 function MemoryList() {
   const [expanded, setExpanded] = useState<string | false>(false);
@@ -53,22 +53,7 @@ function MemoryList() {
 
   let content = null;
   if (isLoading || isLoadingMemories) {
-    content = (
-      <>
-        <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={40}
-          animation="wave"
-        />
-        <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={40}
-          animation="wave"
-        />
-      </>
-    );
+    content = <MemoryListItemsSkeleton />;
   }
   // Supabase error handling
   // Error can be an object or a string that is empty or not
