@@ -1,61 +1,44 @@
-import { setCurrentStateWithId, setMemoryCount } from "../redux/store";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import MemoryListItem from "./MemoryListItem";
-import { useDispatch } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Stack from "@mui/material/Stack";
-import { TMemory } from "../redux/slices/memories/types";
-import useGetMemories from "../redux/hooks/useGetMemories";
+import { TMemory } from "../../redux/slices/memories/types";
+import useGetMemories from "../../redux/hooks/useGetMemories";
 import UpsertMemoryForm from "./UpsertMemoryForm";
 import Skeleton from "@mui/material/Skeleton";
+import useMemoryActions from "../../hooks/useMemoryActions";
 
 function MemoryList() {
-  const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false);
-  const [isEditMemoryModalOpen, setIsEditMemoryModalOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | false>(false);
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
 
   const {
-    data: memoriesData,
+    data: memoryData,
     error: memoriesError,
     isLoading: isLoadingMemories,
     currentState,
   } = useGetMemories();
 
-  // Set total state memory count
-  // Set current state from first memory stateId
-  useEffect(() => {
-    const hasMemoriesData = memoriesData && memoriesData.length > 0;
-    const memoryCount = hasMemoriesData ? memoriesData.length : 0;
-
-    if (hasMemoriesData) {
-      dispatch(
-        setCurrentStateWithId({
-          id: memoriesData[0].state_id,
-        })
-      );
-    }
-
-    dispatch(setMemoryCount({ memoryCount }));
-  }, [dispatch, memoriesData]);
-
-  const handleMemoryUpsert = (insert: boolean) => {
-    handleLoading(false);
-    if (insert) {
-      setIsAddMemoryModalOpen((prev) => !prev);
-      setExpanded(false);
-    } else {
-      setIsEditMemoryModalOpen((prev) => !prev);
-    }
+  const handleLoading = (isLoadingFlag: boolean) => {
+    setIsLoading(isLoadingFlag);
   };
+
+  // Memory actions and operations for Modal redux state
+  const { memoryModalOperation, setMemoryModalOperation, handleMemoryUpsert } =
+    useMemoryActions({
+      memoryData,
+      handleLoading,
+      setExpanded,
+    });
 
   const handleBackClick = () => {
     handleLoading(false);
-    setIsAddMemoryModalOpen(false);
-    setIsEditMemoryModalOpen(false);
+    setMemoryModalOperation({
+      isAdd: false,
+      isEdit: false,
+    });
   };
 
   // Review if useCallback is necessary
@@ -67,10 +50,6 @@ function MemoryList() {
     },
     []
   );
-
-  const handleLoading = (isLoadingFlag: boolean) => {
-    setIsLoading(isLoadingFlag);
-  };
 
   let content = null;
   if (isLoading || isLoadingMemories) {
@@ -101,8 +80,8 @@ function MemoryList() {
     );
   }
   // Check if a crud operation is in progress
-  else if (isAddMemoryModalOpen || isEditMemoryModalOpen) {
-    const isInsert = isAddMemoryModalOpen ? true : false;
+  else if (memoryModalOperation.isAdd || memoryModalOperation.isEdit) {
+    const isInsert = memoryModalOperation.isAdd ? true : false;
     content = (
       <UpsertMemoryForm
         isInsert={isInsert}
@@ -113,7 +92,7 @@ function MemoryList() {
   }
   // Check if there are memories
   // If there are no memories, display empty list message
-  else if (!memoriesData || memoriesData?.length === 0) {
+  else if (!memoryData || memoryData?.length === 0) {
     content = (
       <Stack
         justifyContent="center"
@@ -152,7 +131,7 @@ function MemoryList() {
             End Date
           </Typography>
         </Stack>
-        {memoriesData?.map((memory: TMemory) => {
+        {memoryData?.map((memory: TMemory) => {
           return (
             <MemoryListItem
               expanded={expanded}
@@ -169,8 +148,8 @@ function MemoryList() {
     );
   }
 
-  const defautModalContent = !isAddMemoryModalOpen &&
-    !isEditMemoryModalOpen && (
+  const defautModalContent = !memoryModalOperation.isAdd &&
+    !memoryModalOperation.isEdit && (
       <>
         <Box flex={1}>
           <Typography mb={2.5} variant="h5">

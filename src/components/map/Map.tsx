@@ -2,7 +2,7 @@ import RenderedSVGStates from "./RenderedSVGStates";
 import { setCurrentState } from "../../redux/store";
 import AbsoluteLoader from "../AbsoluteLoader";
 import { useDispatch } from "react-redux";
-import MemoryList from "../MemoryList";
+import MemoryList from "../memory/MemoryList";
 import { useState } from "react";
 import "../styles/map.css";
 import AppBar from "@mui/material/AppBar";

@@ -5,7 +5,7 @@ import {
   useAddMemoryMutation,
   useAddStateMutation,
   useUpdateMemoryMutation,
-} from "../redux/store";
+} from "../../redux/store";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -18,12 +18,12 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import {
   TMemoryInsert,
   TMemoryValidation,
-} from "../redux/slices/memories/types";
-import useLoadingState from "../hooks/useLoadingState";
+} from "../../redux/slices/memories/types";
+import useLoadingState from "../../hooks/useLoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import { isBefore } from "date-fns";
 import dayjs from "dayjs";
-import { useAuth } from "../redux/slices/auth/utils";
+import { useAuth } from "../../redux/slices/auth/utils";
 
 type UpsertMemoryFormProps = {
   handleBackClick: () => void;

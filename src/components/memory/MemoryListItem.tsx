@@ -7,14 +7,14 @@ import {
   useDeleteStateMutation,
   setMemoryToEdit,
   setResetCount,
-} from "../redux/store";
+} from "../../redux/store";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Accordion from "@mui/material/Accordion";
 import Stack from "@mui/material/Stack";
 import { useDispatch, useSelector } from "react-redux";
-import { TMemory } from "../redux/slices/memories/types";
-import useLoadingState from "../hooks/useLoadingState";
+import { TMemory } from "../../redux/slices/memories/types";
+import useLoadingState from "../../hooks/useLoadingState";
 import dayjs from "dayjs";
 
 type MemoryListItemProps = {
