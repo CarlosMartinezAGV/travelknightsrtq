@@ -28,7 +28,7 @@ function Map() {
   const [isShowDialog, setIsShowDialog] = useState(false);
 
   const handleModalOpen = (
-    state_id: string | null,
+    state_id: number | null,
     abbreviation: string,
     name: string
   ) => {
