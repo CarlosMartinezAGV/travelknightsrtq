@@ -1,6 +1,6 @@
 import ToolBar from "../components/ToolBar";
 import AppBar from "@mui/material/AppBar";
-import Map from "../components/map/Map";
+import SVGMap from "../components/map/SVGMap";
 import Stack from "@mui/material/Stack";
 
 function MapPage() {
@@ -21,7 +21,7 @@ function MapPage() {
         id="map-page"
         component="main"
       >
-        <Map />
+        <SVGMap />
       </Stack>
     </Stack>
   );

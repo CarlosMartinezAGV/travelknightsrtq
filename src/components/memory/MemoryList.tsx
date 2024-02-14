@@ -41,7 +41,6 @@ function MemoryList() {
     });
   };
 
-  // Review if useCallback is necessary
   const handleAccordionChange = useCallback(
     (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded((prevExpanded) =>
