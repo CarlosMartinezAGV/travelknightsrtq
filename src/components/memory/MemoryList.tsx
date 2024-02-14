@@ -9,6 +9,7 @@ import useGetMemories from "../../redux/hooks/useGetMemories";
 import UpsertMemoryForm from "./UpsertMemoryForm";
 import Skeleton from "@mui/material/Skeleton";
 import useMemoryActions from "../../hooks/useMemoryActions";
+import MemoryListItemsContainer from "./MemoryListItemsContainer";
 
 function MemoryList() {
   const [expanded, setExpanded] = useState<string | false>(false);
@@ -107,29 +108,7 @@ function MemoryList() {
   // There are memories to display
   else {
     content = (
-      <Stack direction="column" sx={{ width: "100%" }}>
-        <Stack
-          pl={{ xs: 1, sm: 2.2 }}
-          pr={{ xs: 2, sm: 3 }}
-          pb={0.5}
-          width="100%"
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Typography flex={1} fontWeight="bold">
-            Title
-          </Typography>
-          <Typography flex={1} fontWeight="bold">
-            City
-          </Typography>
-          <Typography flex={1} fontWeight="bold">
-            Start Date
-          </Typography>
-          <Typography flex={1} fontWeight="bold">
-            End Date
-          </Typography>
-        </Stack>
+      <MemoryListItemsContainer>
         {memoryData?.map((memory: TMemory) => {
           return (
             <MemoryListItem
@@ -143,7 +122,7 @@ function MemoryList() {
             />
           );
         })}
-      </Stack>
+      </MemoryListItemsContainer>
     );
   }
 
