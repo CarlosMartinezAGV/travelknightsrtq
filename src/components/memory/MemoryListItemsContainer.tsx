@@ -25,8 +25,8 @@ function MemoryListItemsContainer({ children }: { children: React.ReactNode }) {
         <Typography flex={1} fontWeight="bold">
           End Date
         </Typography>
-        {children}
       </Stack>
+      {children}
     </Stack>
   );
 }
