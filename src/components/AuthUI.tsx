@@ -34,21 +34,26 @@ function AuthUI() {
             message: {
               borderWidth: "2px",
             },
+            button: {
+              borderWidth: "2px",
+              borderColor: PRIMARYCOLOR,
+            },
           },
           variables: {
             default: {
               colors: {
                 brand: PRIMARYCOLOR,
-                brandAccent: TERTIARYCOLOR,
+                brandAccent: PRIMARYCOLOR,
                 inputBorder: PRIMARYCOLOR,
                 inputLabelText: PRIMARYCOLOR,
                 inputBorderFocus: TERTIARYCOLOR,
+                inputBorderHover: TERTIARYCOLOR,
                 dividerBackground: PRIMARYCOLOR,
                 anchorTextColor: PRIMARYCOLOR,
                 anchorTextHoverColor: TERTIARYCOLOR,
-                defaultButtonBackground: PRIMARYCOLOR,
+                defaultButtonBackground: SECONDARYCOLOR,
                 defaultButtonText: SECONDARYCOLOR,
-                defaultButtonBackgroundHover: TERTIARYCOLOR,
+                defaultButtonBackgroundHover: PRIMARYCOLOR,
                 messageBackground: QUATERNARYCOLOR,
                 messageBackgroundDanger: QUATERNARYCOLOR,
                 messageBorder: PRIMARYCOLOR,
